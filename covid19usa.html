@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html>
+<meta charset = "UTF-8">
+<style type="text/css">
+	.LText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: center; text-align: left; background-color: white; }
+	.RText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: center; text-align: right; background-color: white; }
+	.CText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: center; text-align: center; color: blue; background-color: white; }
+    .Table { display:table }
+    .Row { display: table-row; background-color: white; height: 40px; }
+    .Cell { display: table-cell; vertical-align: center; text-align: left; border: 0px solid black; padding-left: 5px; padding-right: 5px; }
+	.Slider { width: 300px; }
+	.ShortSlider { width:100px; }
+    .MapCell { display: table-cell; column-span:2; vertical-align: top; border: 0px solid black; padding-left: 0px; padding-right: 0px; width:1000px}
+</style>
+<body>
+<div class = "Table">
+	<div class = "Row">
+		<div class = "MapCell">
+			<canvas id="USAMap" width=1200 height=620 style="border:0px solid #ffffff; background-color:white;">
+			Your browser does not support HTML5
+			</canvas>
+		</div>
+	</div>
+	<div class = "Row">
+			<div class = "Cell">
+				<label class = "LText">Date Select:</label>
+				<input type="range" class=Slider min=0 max=1 value=1 id="DateCtrl">
+				<label class = "CText" id="CurrentDateSet">No Date</label>
+				<label></label>
+				<label class = "LText"><font size=-1><i>and also </i></font>Map Select:</label>
+				<input type="range" class=ShortSlider min=0 max=1 value=1 id="DisplayCtrl">
+				<label class = "CText" id="DisplaySet">Map Description</label>
+			</div>
+	</div>
+</div>
+
+</body>
+
+<script src=USBorders.js></script>
+<script src=USAData.js></script>
+
+<script>
+
+var MinLat = 25;
+var MaxLat = 49;
+var MinLng = -124;
+var MaxLng = -67;
+var MagnifierX = 17;
+var MagnifierY = 19;
+function MapToCanvasX(x) { return((x + 125) * MagnifierX); }
+function MapToCanvasY(y) { return((50 - y) * MagnifierY); }
+// function MapToCanvasX(x) { return(x + (-1 * (MinLng-1)) * MagnifierX); }
+// function MapToCanvasY(y) { return(((MaxLat+1) - y) * MagnifierY); }
+function MapToHeatMapX(x) { return(Math.floor(x - MinLng)); }
+function MapToHeatMapY(y) { return(Math.floor(MaxLat - (y - MinLat))); }
+
+function DecToHex(h)
+{
+	if(h < 0)
+		return("00");
+	if(h < 15)
+		return("0" + h.toString(16));
+	if(h > 255)
+		return("ff");
+	return(h.toString(16));
+}
+
+function DrawUSAMap()
+{
+	var x,y;
+	// clear canvas
+	ctx.globalAlpha = 1.0;
+	ctx.fillStyle = "lightgray";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	// draw map
+	ctx.lineWidth = 1;
+	ctx.fillStyle = "#ffffff";
+	ctx.strokeStyle = "#b2babb";
+	for(x=0;x<Object.keys(States).length;x++)
+	{
+		ctx.beginPath();
+		ctx.moveTo(	MapToCanvasX(Object.values(States)[x].Coordinates[0].lng),
+					MapToCanvasY(Object.values(States)[x].Coordinates[0].lat));
+		for(y=1;y<Object.values(States)[x].Coordinates.length;y++)
+		{
+			ctx.lineTo(	MapToCanvasX(Object.values(States)[x].Coordinates[y].lng),
+						MapToCanvasY(Object.values(States)[x].Coordinates[y].lat))
+		}
+		ctx.closePath();
+		ctx.fill();
+		ctx.stroke();
+
+		/*
+		for(y=0;y<Object.values(States)[x].Coordinates.length;y++)
+		{
+			if(MinLng > Object.values(States)[x].Coordinates[y].lng)
+				MinLng = Object.values(States)[x].Coordinates[y].lng;
+			if(MaxLng < Object.values(States)[x].Coordinates[y].lng)
+				MaxLng = Object.values(States)[x].Coordinates[y].lng;
+			if(MinLat > Object.values(States)[x].Coordinates[y].lat)
+				MinLat = Object.values(States)[x].Coordinates[y].lat;
+			if(MaxLat < Object.values(States)[x].Coordinates[y].lat);
+				MaxLat = Object.values(States)[x].Coordinates[y].lat;
+		}
+		*/
+	}
+	/*
+	MinLng = Math.floor(MinLng);
+	MaxLng = Math.ceil(MaxLng);
+	MinLat = Math.floor(MinLat);
+	MaxLat = Math.ceil(MaxLat);
+
+	console.log("MinLng = " + MinLng + " MaxLng = " + MaxLng);
+	console.log("MinLat = " + MinLat + " MaxLat = " + MaxLat);
+
+	// draw lat/long lines
+	ctx.fillStyle = "#000000";
+	for(y=25;y<50;y++)
+	{
+		for(x=-124;x<-66;x++)
+		{
+			ctx.fillRect(MapToCanvasX(x),MapToCanvasY(y),2,2);
+			// console.log("x = " + MapToCanvasX(x) + " y = " + MapToCanvasY(y));
+		}
+	}
+	*/
+}
+
+// figure out max values
+function PrepData()
+{
+	var x;
+	var TransLng,TransLat;
+
+	if(!ReportDate[DateIndex].Prepped)
+	{
+		ReportDate[DateIndex].MostNewCasesIndex = ReportDate[DateIndex].MostPerCapitaIndex = 
+		ReportDate[DateIndex].HighestPopulationDensityIndex = ReportDate[DateIndex].LargestAreaIndex = 
+		ReportDate[DateIndex].MostCasesIndex = ReportDate[DateIndex].MostDeathsIndex = 
+		ReportDate[DateIndex].MostRecoveriesIndex = 0;
+
+		for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+		{
+			var Data = ReportDate[DateIndex].Data[x];
+		
+			Data.ScaledCases = Math.floor(Math.sqrt(ReportDate[DateIndex].Data[x].Cases));
+
+			if((Data.Population > 0) && (Data.Cases > 0))
+			{
+				Data.PerCapita = Data.Cases / Data.Population;
+				Data.DeathsPerCapita = Data.Deaths / Data.Population;
+				Data.DeathRate = Data.Deaths / Data.Cases;
+				// console.log("dr = " + Data.DeathRate + " d = " + Data.Deaths + " c = " + Data.Cases);
+			}
+			else
+			{
+				Data.PerCapita = 0;
+				Data.DeathsPerCapita = 0;
+				Data.DeathRate = 0;
+			}
+		
+			if(Data.Cases > ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex].Cases)
+				ReportDate[DateIndex].MostCasesIndex = x;
+			if(Data.PerCapita > ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex].PerCapita)
+				ReportDate[DateIndex].MostPerCapitaIndex = x;
+
+			// put cases into heat map
+			if(Data.Long != 0)
+			{
+				TransLng = MapToHeatMapX(Data.Long);
+				TransLat = MapToHeatMapY(Data.Lat);
+				if( (TransLng >= 0) && (TransLat >= 0) && 
+					(TransLng < ReportDate[DateIndex].CaseMap.length) && 
+					(TransLat < ReportDate[DateIndex].CaseMap[TransLng].length))
+				{
+					ReportDate[DateIndex].CaseMap[TransLng][TransLat] += Data.Cases;
+					ReportDate[DateIndex].PopMap[TransLng][TransLat] += Data.Population;
+				}
+			}
+		}
+		ReportDate[DateIndex].Prepped = true;
+
+		console.log("For index " + DateIndex + " Dated " + ReportDate[DateIndex].Date);
+		console.log("Most cases is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex].Admin + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex].Province);
+		console.log(" with " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex].Cases + " cases");
+		console.log("Most cases per capita is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex].Admin + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex].Province);
+		console.log(" with " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex].PerCapita + " per capita cases");
+	}
+}
+
+
+function DrawCaseData()
+{
+	var Lat,Lng,c,x;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.3;
+	// ctx.globalAlpha = 1.0;
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		var Data = ReportDate[DateIndex].Data[x];
+
+		c = Math.floor(Data.ScaledCases/32);
+		if((Data.ScaledCases > 1) && (c == 0))
+			c = 1;
+		if(c >= SeverityColors.length)
+			c = SeverityColors.length-1;
+		ctx.fillStyle = SeverityColors[c];
+		Lat = MapToCanvasY(Data.Lat);
+		Lng = MapToCanvasX(Data.Long);
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,2+Math.floor(Data.ScaledCases/DrawScaleFactor),0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
+function DrawDeathData()
+{
+	var Lat,Lng,d,x,c;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.3;
+	// ctx.globalAlpha = 1.0;
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		var Data = ReportDate[DateIndex].Data[x];
+
+		d = Data.Deaths;
+		if(d > 1)
+		{
+			if(d > 1000)
+				c = DeathSeverityColors.length-1;
+			else
+				if(d > 500)
+					c = DeathSeverityColors.length-2;
+				else
+					if(d > 100)
+						c = DeathSeverityColors.length-3;
+					else
+						if(d > 10)
+							c = DeathSeverityColors.length-4;
+						else
+							c = 0;
+
+			ctx.fillStyle = DeathSeverityColors[c];
+			Lat = MapToCanvasY(Data.Lat);
+			Lng = MapToCanvasX(Data.Long);
+			ctx.beginPath();
+			ctx.arc(Lng,Lat,2+Math.floor(Data.ScaledCases/DrawScaleFactor),0,2*Math.PI);
+			ctx.fill();
+			// ctx.stroke();
+			ctx.closePath();
+		}
+	}
+}
+
+function DrawPerCapitaData()
+{
+	var Lat,Lng,c,x,i,h,s;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.5;
+	s = 5;
+	var a = ReportDate[DateIndex].Data.sort(function(a,b) {return a.PerCapita - b.PerCapita});
+	for(x=0;x<a.length;x++)
+	{
+		var Data = a[x];
+
+		if(Data.PerCapita == 0)
+			continue;
+		else
+		{
+			i = Math.floor(Math.pow(Data.PerCapita * 10000,2));
+			if(i > 127)
+			{
+				h = DecToHex(255 - (i>255?255:i));
+				c = "#" + h + "0000";
+			}
+			else
+			{
+				h = DecToHex(255 - Math.floor(i*2.5));
+				c = "#ff" + h + h;
+			}
+			ctx.fillStyle = c;
+		}
+		Lat = MapToCanvasY(Data.Lat);
+		Lng = MapToCanvasX(Data.Long);
+		// ctx.fillRect(Lng,Lat,s,s);
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
+function DrawDeathsPerCapitaData()
+{
+	var Lat,Lng,c,x,i,h,s;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.5;
+	s = 5;
+	var a = ReportDate[DateIndex].Data.sort(function(a,b) {return a.DeathsPerCapita - b.DeatsPerCapita});
+	for(x=0;x<a.length;x++)
+	{
+		var Data = a[x];
+
+		if(Data.DeathsPerCapita == 0)
+			continue;
+		else
+		{
+			i = Math.floor(Math.pow(Data.PerCapita * 10000,2));
+			if(i > 127)
+			{
+				h = DecToHex(255 - (i>255?255:i));
+				c = "#" + h + "0000";
+			}
+			else
+			{
+				h = DecToHex(255 - Math.floor(i*2.5));
+				c = "#ff" + h + h;
+			}
+			ctx.fillStyle = c;
+		}
+		Lat = MapToCanvasY(Data.Lat);
+		Lng = MapToCanvasX(Data.Long);
+		// ctx.fillRect(Lng,Lat,s,s);
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
+function DrawCaseDeathRateData()
+{
+	var Lat,Lng,c,x,i,h,s;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 1.0;
+	s = 5;
+	var a = ReportDate[DateIndex].Data.sort(function(a,b) {return a.DeathRate - b.DeathRate});
+	for(x=0;x<a.length;x++)
+	{
+		var Data = a[x];
+
+		if(Data.DeathRate == 0)
+			continue;
+		else
+		{
+			// console.log("r = " + Data.DeathRate);
+			if(Data.DeathRate > 0.3)
+				c = DeathSeverityColors.length-1;
+			else
+				if(Data.DeathRate > 0.1)
+					c = DeathSeverityColors.length-2;
+				else
+					if(Data.DeathRate > 0.05)
+						c = DeathSeverityColors.length-3;
+					else
+						if(Data.DeathRate > 0.001)
+							c = DeathSeverityColors.length-4;
+						else
+							c = 0;
+
+			ctx.fillStyle = DeathRateColors[c];
+		}
+		Lat = MapToCanvasY(Data.Lat);
+		Lng = MapToCanvasX(Data.Long);
+		// ctx.fillRect(Lng,Lat,s,s);
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
+function DrawCaseByGeo()
+{
+	var Lat,Lng,c,x,y,i,z;
+	var SizeX,SizeY;
+
+	ctx.fillStyle = "#000000";
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 1;
+	ctx.globalAlpha = 0.2;
+
+	/*
+	// draw lat/long lines and labels
+	ctx.font = "8px Courier";
+	for(y=MinLat;y<=MaxLat;y++)
+	{
+		ctx.fillText(y,8,MapToCanvasY(y));
+		ctx.beginPath();
+		ctx.moveTo(MapToCanvasX(MinLng),MapToCanvasY(y));
+		ctx.lineTo(MapToCanvasX(MaxLng),MapToCanvasY(y));
+		ctx.stroke();
+		ctx.closePath();
+	}
+
+	for(x=MinLng;x<=MaxLng;x++)
+	{
+		ctx.fillText(x,MapToCanvasX(x),(x%2)?8:14);
+		ctx.beginPath();
+		ctx.moveTo(MapToCanvasX(x),MapToCanvasY(MinLat));
+		ctx.lineTo(MapToCanvasX(x),MapToCanvasY(MaxLat));
+		ctx.stroke();
+		ctx.closePath();
+		// console.log("x = " + MapToCanvasX(x) + " y = " + MapToCanvasY(y));
+	}
+	*/
+
+	SizeX = MapToCanvasX(MinLng) - MapToCanvasX(MinLng-1);
+	SizeY = MapToCanvasY(MinLat) - MapToCanvasY(MinLat+1);
+	ctx.globalAlpha = 0.5;
+	for(x=MinLng;x<=MaxLng;x++)
+	{
+		for(y=MinLat;y<=MaxLat;y++)
+		{
+			z = ReportDate[DateIndex].CaseMap[MapToHeatMapX(x)][MapToHeatMapY(y)];
+			/*
+			ctx.fillStyle = "#000000";
+			ctx.fillText(z,MapToCanvasX(x),MapToCanvasY(y)+8);
+			*/
+
+			if(z != 0)
+			{
+				i = Math.floor(Math.sqrt(z));
+				if(i > 64)
+				{
+					h = DecToHex(255 - (i>255?255:i));
+					c = "#" + h + "0000";
+				}
+				else
+				{
+					if(i > 32)
+					{
+						// h = DecToHex(255 - Math.floor(i*2.0));
+						h = DecToHex(255 - Math.floor(i*4.0));
+						c = "#ff" + h + h;
+					}
+					else
+					{
+						h = DecToHex(255 - Math.floor(i*2.0));
+						c = "#ff" + h + h;
+						// c = "#ff80 " + h;
+					}
+				}
+				ctx.fillStyle = c;
+
+				ctx.fillRect(MapToCanvasX(x),MapToCanvasY(y),SizeX,SizeY);
+			}
+		}
+	}
+}
+
+function DrawPerCapitaByGeo()
+{
+	var Lat,Lng,c,x,y,i,z;
+	var Cases,Pop;
+	var SizeX,SizeY;
+
+	ctx.fillStyle = "#000000";
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 1;
+	ctx.globalAlpha = 0.4;
+
+	SizeX = MapToCanvasX(MinLng) - MapToCanvasX(MinLng-1);
+	SizeY = MapToCanvasY(MinLat) - MapToCanvasY(MinLat+1);
+	ctx.globalAlpha = 0.5;
+	for(x=MinLng;x<=MaxLng;x++)
+	{
+		for(y=MinLat;y<=MaxLat;y++)
+		{
+			Pop = ReportDate[DateIndex].PopMap[MapToHeatMapX(x)][MapToHeatMapY(y)];
+			Cases = ReportDate[DateIndex].CaseMap[MapToHeatMapX(x)][MapToHeatMapY(y)];
+			if(Pop != 0)
+			{
+				// z = ReportDate[DateIndex].CaseMap[MapToHeatMapX(x)][MapToHeatMapY(y)] / ReportDate[DateIndex].PopMap[MapToHeatMapX(x)][MapToHeatMapY(y)];
+				// z = Math.floor(ReportDate[DateIndex].PopMap[MapToHeatMapX(x)][MapToHeatMapY(y)] / 1000);
+				// z = Math.floor(ReportDate[DateIndex].CaseMap[MapToHeatMapX(x)][MapToHeatMapY(y)] / 1000);
+				z = Cases / Pop;
+				// ctx.fillStyle = "#000000";
+				// ctx.fillText(z,MapToCanvasX(x),MapToCanvasY(y)+8);
+
+				i = Math.floor(Math.pow(z * 10000,2));
+				if(i > 127)
+				{
+					h = DecToHex(255 - (i>255?255:i));
+					c = "#" + h + "0000";
+				}
+				else
+				{
+					h = DecToHex(255 - Math.floor(i*2.5));
+					c = "#ff" + h + h;
+				}
+				ctx.fillStyle = c;
+				Lat = MapToCanvasY(y);
+				Lng = MapToCanvasX(x);
+				ctx.fillRect(Lng,Lat,SizeX,SizeY);
+			}
+		}
+	}
+}
+
+function DrawData()
+{
+	var x;
+
+	switch(DisplayIndex)
+	{
+		case	0:	// case data
+					DrawCaseData();
+					break;
+		case	1:	// Deaths per county
+					DrawDeathData();
+					break;
+		case	2:	// per capita data
+					DrawPerCapitaData();
+					break;
+		case	3:	// Deaths Per Capita per county
+					DrawDeathsPerCapitaData();
+					break;
+		case	4:	// Case Death Rate
+					DrawCaseDeathRateData();
+					break;
+		case	5:	// case by geography
+					DrawCaseByGeo();
+					break;
+		case	6:	// per capita by geography
+					DrawPerCapitaByGeo();
+					break;
+	}
+}
+
+function Pie(CenterX, CenterY, Radius, Amounts, Labels)
+{
+	var x,y;
+	var cx,cy;
+	var lx,ly;
+	var Total = 0;
+	var Percents = [];
+	var Radians = [];
+	var LineWidth = 20;
+	var RadiansSoFar = 0;
+ 
+	var Color1 = "#7878A0";
+	var Color2 = "#404080";
+	var Color3 = "#9090C0";
+ 
+	for(x=0;x<Amounts.length;x++)
+	{
+		Total += Amounts[x];
+	}
+
+	if(Total == 0)
+	{
+		ctx.textAlign = "center";
+		ctx.fillStyle = "10px Courier black";
+		ctx.fillText("(No data to report)",CenterX,CenterY);
+		ctx.textAlign = "left";
+		return;
+	}
+ 
+	for(x=0;x<Amounts.length;x++)
+	{
+		Percents[x] = Amounts[x] / Total;
+	}
+ 
+	for(x=0;x<Amounts.length;x++)
+	{
+		Radians[x] = Percents[x] * (Math.PI * 2);
+	}
+ 
+	// ctx.font = "8pt Courier";
+	// ctx.setBaseline = "top";
+	// ctx.textBaseline="middle";
+	ctx.textAlign = "center";
+	for(x=0;x<Amounts.length;x++)
+	{
+		// draw arc of graph
+		// ctx.fillStyle = ctx.strokeStyle = x==0?Color3:(x%2)==1?Color1:Color2;
+		ctx.strokeStyle = ctx.fillStyle = CountyColors[x];
+		ctx.beginPath();
+		ctx.lineWidth = LineWidth;
+		ctx.arc(CenterX,CenterY,Radius,RadiansSoFar,RadiansSoFar + Radians[x]);
+		ctx.stroke();
+ 
+		// draw label line and label
+		ctx.beginPath();
+		ctx.lineWidth = 2;
+		lx = cx = CenterX + (Radius * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		ly = cy = CenterY + (Radius * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		ctx.moveTo(cx,cy);
+		cx = CenterX + ((Radius+10) * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		cy = CenterY + ((Radius+10) * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		ctx.lineTo(cx,cy);
+		ctx.stroke();
+
+		// ctx.fillStyle = "10px Courier black";
+		ctx.fillStyle = "black";
+		ctx.strokeStyle = "white";
+		ctx.strokeText(Labels[x],cx,cy);
+		ctx.fillText(Labels[x],cx,cy);
+
+		// Draw separating line
+		ctx.beginPath();
+		ctx.strokeStyle = "lightgray";
+		ctx.lineWidth = 5;
+		cx = CenterX+((Radius * Math.cos(RadiansSoFar+Radians[x]))*1.2);
+		cy = CenterY+((Radius * Math.sin(RadiansSoFar+Radians[x]))*1.2);
+		ctx.moveTo(CenterX,CenterY);
+		ctx.lineTo(cx,cy);
+		ctx.stroke();
+
+		RadiansSoFar += Radians[x];
+	}
+	ctx.textAlign = "left";
+}
+
+function UpdateClickData(mx,my)
+{
+	var x;
+	var cx,cy;
+	var MaxSummary = 6;
+
+	ClickData.length = 0;
+
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		var Data = ReportDate[DateIndex].Data[x];
+
+		cx = MapToCanvasX(Data.Long);
+		cy = MapToCanvasY(Data.Lat);
+		if(	(cx > (mx - Tolerance)) &&
+			(cx < (mx + Tolerance)) &&
+			(cy > (my - Tolerance)) &&
+			(cy < (my + Tolerance)))
+		{
+			if(ClickData.length == MaxSummary)
+				break;
+
+			ClickData[ClickData.length] = Data;
+		}
+	}
+}
+
+function MouseDown(Event)
+{
+	var mx,my;
+
+	mx = Event.pageX;
+	my = Event.pageY;
+	mx -= canvas.offsetLeft;
+	my -= canvas.offsetTop;
+
+	LastClickedX = mx;
+	LastClickedY = my;
+
+	UpdateClickData(mx,my);
+	DrawUSAMap();
+	DrawClickData();
+	DrawData();
+	DrawClickDataCounties();
+}
+
+function DrawClickData()
+{
+	var FontSize;
+	var dx,dy;
+	var x,y;
+	var z;
+	var Amounts = [],Labels = [];
+
+	dx = RightDrawAreaStart;
+	dy = 100;
+	FontSize = 10;
+	StatColumn = 100;
+	ctx.fillStyle = "lightgray";
+	ctx.fillRect(RightDrawAreaStart,0,canvas.width-RightDrawAreaStart,canvas.height);
+	if(ClickData.length == 0)
+	{
+		ctx.font = "12px Courier";
+		ctx.fillStyle = "black";
+		ctx.fillText("No county data here",dx,dy);
+	}
+	else
+	{
+		// pie charts
+		ctx.font = "12px Courier";
+		ctx.fillStyle = "blue";
+		ctx.fillText("Geo " + Math.floor(ClickData[0].Lat) + " by " + Math.floor(ClickData[0].Long) + "(" + ClickData[0].Province + ")",dx-20,dy);
+
+		dy += 16;
+		// ctx.fillText("Date " + ReportDate[DateIndex].Date,dx,dy);
+
+		dy += 16;
+		ctx.font = "12px Courier";
+		ctx.fillStyle = "black";
+		ctx.fillText("Case distribution",dx,dy);
+
+		for(x=0;x<ClickData.length;x++)
+		{
+			Amounts[x] = ClickData[x].Cases;
+			Labels[x] = ClickData[x].Admin;
+		}
+
+		dy += 80;
+		Pie(dx+60,dy,60,Amounts,Labels);
+
+		for(x=0;x<ClickData.length;x++)
+			Amounts[x] = ClickData[x].Deaths;
+
+		dy += 90;
+		ctx.font = "12px Courier";
+		ctx.fillStyle = "black";
+		ctx.fillText("Fatality distribution",dx,dy);
+
+		dy += 80;
+		Pie(dx+60,dy,60,Amounts,Labels);
+
+		// Detailed stats
+		dx = 30;
+		for(x=0;x<ClickData.length;x++)
+		{
+			dy = BottomDrawAreaStart;
+			ctx.font = "12px Courier";
+			// ctx.fillStyle = "blue";
+			ctx.fillStyle = CountyColors[x];
+			if(ClickData[x].SqMi!= 0)
+			{
+				if(ClickData[x].Province.localeCompare("Louisiana") == 0)
+					ctx.fillText(ClickData[x].Admin + " Parish",dx,dy);
+				else
+					ctx.fillText(ClickData[x].Admin + " County",dx,dy);
+			}
+			else
+					ctx.fillText(ClickData[x].Admin,dx,dy);
+
+			dy += FontSize;
+			ctx.font = "8px Courier";
+			ctx.fillStyle = "gray";
+			ctx.fillText(ClickData[x].Province,dx,dy);
+			if(ClickData[x].Population != 0)
+			{
+				dy += FontSize;
+				ctx.fillStyle = "green";
+				ctx.fillText("Population:",dx,dy);
+				ctx.fillText(ClickData[x].Population,dx+StatColumn,dy);
+			}
+			if(ClickData[x].SqMi!= 0)
+			{
+				dy += FontSize;
+				ctx.fillText("Square Miles:",dx,dy);
+				ctx.fillText(ClickData[x].SqMi,dx+StatColumn,dy);
+			}
+			dy += FontSize;
+			ctx.fillStyle = "black";
+			ctx.fillText("Cases:",dx,dy);
+			ctx.fillStyle = "red";
+			ctx.fillText(ClickData[x].Cases,dx+StatColumn,dy);
+			dy += FontSize;
+			ctx.fillStyle = "black";
+			ctx.fillText("Deaths:",dx,dy);
+			ctx.fillStyle = "red";
+			ctx.fillText(ClickData[x].Deaths,dx+StatColumn,dy);
+			dy += FontSize;
+			ctx.fillStyle = "black";
+			ctx.fillText("Recovered:",dx,dy);
+			ctx.fillStyle = "red";
+			ctx.fillText(ClickData[x].Recovered,dx+StatColumn,dy);
+			if(ClickData[x].Population != 0)
+			{
+				dy += FontSize;
+				ctx.fillStyle = "black";
+				ctx.fillText("Cases Per Capita:",dx,dy);
+				ctx.fillStyle = "red";
+				z = (ClickData[x].PerCapita * 100).toFixed(3);
+				ctx.fillText(z + "%",dx+StatColumn,dy);
+				dy += FontSize;
+				ctx.fillStyle = "black";
+				ctx.fillText("Deaths Per Capita:",dx,dy);
+				ctx.fillStyle = "red";
+				z = (ClickData[x].DeathsPerCapita * 100).toFixed(3);
+				ctx.fillText(z + "%",dx+StatColumn,dy);
+				dy += FontSize;
+				ctx.fillStyle = "black";
+				ctx.fillText("Death Rate:",dx,dy);
+				ctx.fillStyle = "red";
+				z = (ClickData[x].DeathRate * 100).toFixed(3);
+				ctx.fillText(z + "%",dx+StatColumn,dy);
+			}
+			dx += DetailedStatsSpacing;
+		}
+	}	
+}
+
+function DrawClickDataCounties()
+{
+	var x;
+
+	// Draw selected counties
+	ctx.globalAlpha = 1.0;
+	if(ClickData.length != 0)
+	{
+		for(x=0;x<ClickData.length;x++)
+		{
+			ctx.fillStyle = CountyColors[x];
+			ctx.strokeStyle = "black";
+			ctx.LineWidth = 4;
+			ctx.beginPath();
+			ctx.moveTo(MapToCanvasX(ClickData[x].Long),MapToCanvasY(ClickData[x].Lat));
+			ctx.lineTo(MapToCanvasX(ClickData[x].Long)-Tolerance,MapToCanvasY(ClickData[x].Lat)+Tolerance);
+			ctx.lineTo(MapToCanvasX(ClickData[x].Long)+Tolerance,MapToCanvasY(ClickData[x].Lat)+Tolerance);
+			ctx.lineTo(MapToCanvasX(ClickData[x].Long),MapToCanvasY(ClickData[x].Lat));
+			ctx.closePath();
+			// ctx.stroke();
+			ctx.fill();
+			// ctx.fillRect(MapToCanvasX(ClickData[x].Long)-(Tolerance/2),MapToCanvasY(ClickData[x].Lat)-(Tolerance/2),Tolerance,Tolerance);
+		}
+	}
+	ctx.font = "italic 12px Courier";
+	ctx.fillStyle = "black";
+	ctx.fillText("Data Sources: Johns Hopkins University, United States Census",10,10);
+	ctx.font = "16px Courier";
+	ctx.fillStyle = "black";
+	// ctx.fillText(DisplayOptions[DisplayIndex] + ", " + ReportDate[DateIndex].Date, 10, canvas.height-6);
+	ctx.fillText(DisplayOptions[DisplayIndex] + ", " + ReportDate[DateIndex].Date, 10, BottomDrawAreaStart - 30);
+	ctx.font = "10px Courier";
+	ctx.fillStyle = "gray";
+	if(ClickData.length == 0)
+		ctx.fillText("Click on map for county level detail", 10, BottomDrawAreaStart - 18);
+	else
+		ctx.fillText("Scroll Date Select for selected county details on other dates", 10, BottomDrawAreaStart - 18);
+}
+
+var ClickData = [];
+var Tolerance = 10;
+var RightDrawAreaStart = 1040;
+var BottomDrawAreaStart = 500;
+var LastClickedX = 0;
+var LastClickedY = 0;
+var DetailedStatsSpacing = 200;
+// var CountyColors = [ "#e400ff", "#ba4a00", "#ffff00", "#0000ff", "#00ffc9", "#00e0ff" ];
+var CountyColors = [ "#1c1a6e","#696e1a","#1a6e28","#1b6769","#645c65","#ba4a00" ];
+var SeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff0000" ];
+var DeathSeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff4000", "#ff0000" ];
+var DeathRateColors = [ "#c0c0c0", "#a0a0a0", "#808080", "#404040", "#000000" ];
+var canvas = document.getElementById("USAMap");
+var ctx = canvas.getContext("2d");
+var DrawScaleFactor = 2;
+var DateIndex = ReportDate.length-1;	// Start with latest date in set
+var DisplayOptions = [ 
+							"Cases Per County", 						// 0
+							"Deaths per County",						// 1
+							"Cases Per Capita Per County", 				// 2
+							"Deaths Per Capita Per County",				// 3
+							"Case Death Rate Percentage By County",		// 4
+							"Cases by Geographic Area", 				// 5
+							"Cases Per Capita by Geographic Area"		// 6
+					];
+var DisplayIndex = 0;
+var xx,yy,zz;
+
+for(zz=0;zz<ReportDate.length;zz++)
+{
+	ReportDate[zz].CaseMap = new Array(100);
+	ReportDate[zz].PopMap = new Array(100);
+	for(xx=0;xx<100;xx++)
+	{
+		ReportDate[zz].CaseMap[xx] = new Array(100);
+		ReportDate[zz].PopMap[xx] = new Array(100);
+		for(yy=0;yy<100;yy++)
+		{
+			ReportDate[zz].CaseMap[xx][yy] = 0;
+			ReportDate[zz].PopMap[xx][yy] = 0;
+		}
+	}
+}
+			
+for(x=0;x<ReportDate.length;x++)
+	ReportDate[x].Prepped = false;
+
+DrawUSAMap();
+PrepData();
+DrawClickData();
+DrawData();
+DrawClickDataCounties();
+
+var DateSlider = document.getElementById("DateCtrl");
+var DateSet = document.getElementById("CurrentDateSet");
+DateSlider.min = 0;
+DateSlider.max = ReportDate.length-1;
+DateSlider.value = DateIndex;
+DateSet.innerHTML = ReportDate[DateIndex].Date;
+DateSlider.oninput = function() 
+{
+	// console.log("Slider value = " + this.value);
+	DateIndex = this.value;
+	DateSet.innerHTML = ReportDate[DateIndex].Date;
+	DrawUSAMap();
+	PrepData();
+	if(ClickData.length != 0)
+		UpdateClickData(LastClickedX, LastClickedY);
+	DrawClickData();
+	DrawData();
+	DrawClickDataCounties();
+}
+
+var DisplaySlider = document.getElementById("DisplayCtrl");
+DisplaySlider.min = 0;
+DisplaySlider.max = DisplayOptions.length-1;
+DisplaySlider.value = DisplayIndex;
+var DisplaySet = document.getElementById("DisplaySet");
+DisplaySet.innerHTML = DisplayOptions[DisplayIndex];
+DisplaySlider.oninput = function()
+{
+	// console.log("Slider value = " + this.value);
+	DisplayIndex = Number(this.value);
+	DisplaySet.innerHTML = DisplayOptions[DisplayIndex];
+	DrawUSAMap();
+	DrawClickData();
+	DrawData();
+	DrawClickDataCounties();
+}
+
+// canvas.addEventListener("mousedown",MouseDown,false);
+canvas.addEventListener("click",MouseDown,false);
+
+</script>
+
+</html>
