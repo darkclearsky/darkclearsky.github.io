@@ -2,15 +2,21 @@
 <html>
 <meta charset = "UTF-8">
 <style type="text/css">
-	.LText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: center; text-align: left; background-color: white; }
-	.RText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: center; text-align: right; background-color: white; }
-	.CText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: center; text-align: center; color: blue; background-color: white; }
+	.LText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: left; background-color: white; }
+	.RText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: right; background-color: white; }
+	.CText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: center; color: blue; background-color: white; }
     .Table { display:table }
     .Row { display: table-row; background-color: white; height: 40px; }
-    .Cell { display: table-cell; vertical-align: center; text-align: left; border: 0px solid black; padding-left: 5px; padding-right: 5px; }
-	.Slider { width: 300px; }
-	.ShortSlider { width:100px; }
+    .Cell { display: table-cell; vertical-align: bottom; text-align: left; border: 0px solid black; padding-left: 5px; padding-right: 5px; }
     .MapCell { display: table-cell; column-span:2; vertical-align: top; border: 0px solid black; padding-left: 0px; padding-right: 0px; width:1000px}
+	.Slider { width: 300px; height: 25px; -webkit-appearance: none; -webkit-transition:0.2s; background-color:lightgray; outline:none; opacity:0.7s; transition: opacity 0.2s; }
+	.Slider:hover { opacity:1 }
+	.Slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: #4CAF50; cursor: pointer; }
+	.Slider::-moz-range-thumb { width: 25px; height: 25px; background: #4CAF50; cursor: pointer; }
+	.ShortSlider { width:100px; height: 25px; -webkit-appearance: none; -webkit-transition:0.2s; background-color:lightgray; outline:none; opacity:0.7s; transition: opacity 0.2s; }
+	.ShortSlider:hover { opacity:1 }
+	.ShortSlider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: #4CAF50; cursor: pointer; }
+	.ShortSlider::-moz-range-thumb { width: 25px; height: 25px; background: #4CAF50; cursor: pointer; }
 </style>
 <body>
 <div class = "Table">
@@ -597,12 +603,6 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 		ctx.lineTo(cx,cy);
 		ctx.stroke();
 
-		// ctx.fillStyle = "10px Courier black";
-		ctx.fillStyle = "black";
-		ctx.strokeStyle = "white";
-		ctx.strokeText(Labels[x],cx,cy);
-		ctx.fillText(Labels[x],cx,cy);
-
 		// Draw separating line
 		ctx.beginPath();
 		ctx.strokeStyle = "lightgray";
@@ -615,6 +615,26 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 
 		RadiansSoFar += Radians[x];
 	}
+
+	// draw labels on top of pie segments
+	RadiansSoFar = 0;
+	ctx.fillStyle = "black";
+	ctx.strokeStyle = "white";
+	for(x=0;x<Amounts.length;x++)
+	{
+		cx = CenterX + ((Radius+10) * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		cy = CenterY + ((Radius+10) * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		ctx.strokeText(Labels[x],cx,cy);
+		ctx.fillText(Labels[x],cx,cy);
+		RadiansSoFar += Radians[x];
+	}
+
+	// draw total amount in center
+	ctx.fillStyle = "black";
+	ctx.strokeStyle = "white";
+	ctx.strokeText(Total,CenterX,CenterY);
+	ctx.fillText(Total,CenterX,CenterY);
+
 	ctx.textAlign = "left";
 }
 
@@ -643,6 +663,7 @@ function UpdateClickData(mx,my)
 			ClickData[ClickData.length] = Data;
 		}
 	}
+	ClickData.sort(function(a,b) { return(a.Admin.localeCompare(b.Admin)); });
 }
 
 function MouseDown(Event)
@@ -836,7 +857,7 @@ function DrawClickDataCounties()
 
 var ClickData = [];
 var Tolerance = 10;
-var RightDrawAreaStart = 1040;
+var RightDrawAreaStart = 1020;
 var BottomDrawAreaStart = 500;
 var LastClickedX = 0;
 var LastClickedY = 0;
