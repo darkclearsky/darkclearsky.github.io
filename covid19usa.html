@@ -539,6 +539,81 @@ function DrawData()
 	}
 }
 
+function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries2)
+{
+	var x,y;
+	var Max = 0;
+	var XScale,YScale;
+
+	for(x=0;x<ValueSeries1.length;x++)
+	{
+		if(Max < ValueSeries1[x])
+			Max = ValueSeries1[x];
+		if(Max < ValueSeries2[x])
+			Max = ValueSeries2[x];
+	}
+
+	YScale = SizeXY[1] / Max;
+	XScale = SizeXY[0] / (ValueSeries1.length-1);	// subtract 1 because Y axis is first point on scale
+
+	ctx.globalAlpha = 1.0;
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = 2;
+	ctx.textAlign = "center";
+
+	ctx.beginPath();
+	ctx.moveTo(TopLeft[0],TopLeft[1]);
+	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+	// ctx.closePath();
+	ctx.stroke();
+	ctx.lineWidth = 1;
+	ctx.font = "5pt Courier";
+	ctx.strokeText(XYLabels[0],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]+SizeXY[1]+20);
+	ctx.strokeText(Max,TopLeft[0]+8,TopLeft[1]);
+	for(x=0;x<=ValueSeries1.length-1;x++)
+	{
+		if(x == XEmphasis)
+		{
+			ctx.globalAlpha = 1.0;
+			ctx.strokeStyle = "green";
+		}
+		else
+		{
+			ctx.globalAlpha = 0.5;
+			ctx.strokeStyle = "gray";
+		}
+		ctx.beginPath();
+		ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]);
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]);
+		ctx.stroke();
+		ctx.globalAlpha = 1.0;
+		ctx.strokeStyle = "black";
+		ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+10);
+	}
+	
+	ctx.globalAlpha = 1.0;
+	ctx.strokeStyle = "red";
+	ctx.beginPath();
+	//ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries1[0]));
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
+	for(x=1;x<ValueSeries1.length;x++)
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+	ctx.stroke();
+
+	ctx.globalAlpha = 1.0;
+	ctx.strokeStyle = "black";
+	ctx.beginPath();
+	// ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries2[0]));
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries2[0]*YScale)));
+	for(x=1;x<ValueSeries2.length;x++)
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries2[x]*YScale)));
+	ctx.stroke();
+	ctx.closePath();
+
+	ctx.textAlign = "left";
+}
+
 function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 {
 	var x,y;
@@ -618,6 +693,7 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 
 	// draw labels on top of pie segments
 	RadiansSoFar = 0;
+	ctx.lineWidth = 1;
 	ctx.fillStyle = "black";
 	ctx.strokeStyle = "white";
 	for(x=0;x<Amounts.length;x++)
@@ -640,9 +716,9 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 
 function UpdateClickData(mx,my)
 {
-	var x;
+	var x,y,z;
 	var cx,cy;
-	var MaxSummary = 6;
+	var MaxSummary = 4;
 
 	ClickData.length = 0;
 
@@ -660,9 +736,27 @@ function UpdateClickData(mx,my)
 			if(ClickData.length == MaxSummary)
 				break;
 
+			Data.HistoryData = new Array(ReportDate.length);	// for tying clickdata to other dates for graphs
+
 			ClickData[ClickData.length] = Data;
 		}
 	}
+	// now that we have the relevant counties, we need to tie all historical dates to it
+	for(z=0;z<ClickData.length;z++)
+	{
+		for(x=0;x<ReportDate.length;x++)
+		{
+			for(y=0;y<ReportDate[x].Data.length;y++)
+			{
+				if(ReportDate[x].Data[y].FIPS == ClickData[z].FIPS)
+				{
+					ClickData[z].HistoryData[x] = ReportDate[x].Data[y];
+					break;
+				}
+			}
+		}
+	}
+
 	ClickData.sort(function(a,b) { return(a.Admin.localeCompare(b.Admin)); });
 }
 
@@ -691,12 +785,16 @@ function DrawClickData()
 	var dx,dy;
 	var x,y;
 	var z;
-	var Amounts = [],Labels = [];
+	var StatColumn = 100;
+	var ChartColumn = 150;
+	var Amounts = [];
+	var Labels = [];
+	var ChartCases = [];
+	var ChartFatalities = [];
 
 	dx = RightDrawAreaStart;
 	dy = 100;
 	FontSize = 10;
-	StatColumn = 100;
 	ctx.fillStyle = "lightgray";
 	ctx.fillRect(RightDrawAreaStart,0,canvas.width-RightDrawAreaStart,canvas.height);
 	if(ClickData.length == 0)
@@ -745,6 +843,7 @@ function DrawClickData()
 		for(x=0;x<ClickData.length;x++)
 		{
 			dy = BottomDrawAreaStart;
+			ctx.globalAlpha = 1.0;
 			ctx.font = "12px Courier";
 			// ctx.fillStyle = "blue";
 			ctx.fillStyle = CountyColors[x];
@@ -785,11 +884,13 @@ function DrawClickData()
 			ctx.fillText("Deaths:",dx,dy);
 			ctx.fillStyle = "red";
 			ctx.fillText(ClickData[x].Deaths,dx+StatColumn,dy);
+			/*  // recovered data is always 0 in JH data.. (shrug..)
 			dy += FontSize;
 			ctx.fillStyle = "black";
 			ctx.fillText("Recovered:",dx,dy);
 			ctx.fillStyle = "red";
 			ctx.fillText(ClickData[x].Recovered,dx+StatColumn,dy);
+			*/
 			if(ClickData[x].Population != 0)
 			{
 				dy += FontSize;
@@ -811,6 +912,28 @@ function DrawClickData()
 				z = (ClickData[x].DeathRate * 100).toFixed(3);
 				ctx.fillText(z + "%",dx+StatColumn,dy);
 			}
+
+			if(ClickData[x].Population != 0)
+			{
+				// XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries2)
+				ChartCases.length = 0;
+				ChartFatalities.length = 0;
+				for(y=0;y<ClickData[x].HistoryData.length;y++)
+				{
+					if(ClickData[x].HistoryData[y])
+					{
+						ChartCases[y] = ClickData[x].HistoryData[y].Cases;
+						ChartFatalities[y] = ClickData[x].HistoryData[y].Deaths;
+					}
+					else
+					{
+						ChartCases[y] = 0;
+						ChartFatalities[y] = 0;
+					}
+				}
+				XYChart([dx+ChartColumn,dy-(FontSize*9)],[110,90],DateIndex,["Days since 3/22",""],ChartCases,ChartFatalities);
+			}
+
 			dx += DetailedStatsSpacing;
 		}
 	}	
@@ -861,7 +984,7 @@ var RightDrawAreaStart = 1020;
 var BottomDrawAreaStart = 500;
 var LastClickedX = 0;
 var LastClickedY = 0;
-var DetailedStatsSpacing = 200;
+var DetailedStatsSpacing = 280;
 // var CountyColors = [ "#e400ff", "#ba4a00", "#ffff00", "#0000ff", "#00ffc9", "#00e0ff" ];
 var CountyColors = [ "#1c1a6e","#696e1a","#1a6e28","#1b6769","#645c65","#ba4a00" ];
 var SeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff0000" ];
