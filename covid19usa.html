@@ -175,18 +175,25 @@ function DrawUSAMap()
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
 
-	ctx.fillStyle = "white";
+	if(ClickDataCategory == 1)
+		ctx.fillStyle = "black";
+	else
+		ctx.fillStyle = "white";
 	ctx.beginPath();
 	ctx.arc(SevereClickArea1[0],SevereClickArea1[1],SevereClickArea1Radius,0,2*Math.PI);
 	ctx.fill();
 	ctx.closePath();
-	ctx.fillText("<-Click here to see locations with most cases",SevereClickArea1[0]+10,SevereClickArea1[1]+6);
+	ctx.fillText("<-click here to see locations with most cases",SevereClickArea1[0]+10,SevereClickArea1[1]+6);
 
+	if(ClickDataCategory == 2)
+		ctx.fillStyle = "black";
+	else
+		ctx.fillStyle = "white";
 	ctx.beginPath();
 	ctx.arc(SevereClickArea2[0],SevereClickArea2[1],SevereClickArea2Radius,0,2*Math.PI);
 	ctx.fill();
 	ctx.closePath();
-	ctx.fillText("<-Click here to see locations with most cases per capita",SevereClickArea2[0]+10,SevereClickArea2[1]+6);
+	ctx.fillText("<-click here to see locations with most cases per capita",SevereClickArea2[0]+10,SevereClickArea2[1]+6);
 
 	ctx.textBaseline = "bottom";
 
@@ -196,8 +203,8 @@ function DrawUSAMap()
 	MinLat = Math.floor(MinLat);
 	MaxLat = Math.ceil(MaxLat);
 
-	console.log("MinLng = " + MinLng + " MaxLng = " + MaxLng);
-	console.log("MinLat = " + MinLat + " MaxLat = " + MaxLat);
+	// console.log("MinLng = " + MinLng + " MaxLng = " + MaxLng);
+	// console.log("MinLat = " + MinLat + " MaxLat = " + MaxLat);
 
 	// draw lat/long lines
 	ctx.fillStyle = "#000000";
@@ -225,6 +232,11 @@ function PrepData()
 			var Data = ReportDate[DateIndex].Data[x];
 		
 			Data.ScaledCases = Math.floor(Math.sqrt(ReportDate[DateIndex].Data[x].Cases));
+
+			// make specific check to add population stats for New York City since it's not a county, but relevant to this display.
+			// this will let the chart calculations happen later in the logic even though it's county level logic.
+			if(Data.Admin.localeCompare("New York City") == 0)
+				Data.Population = 8175133;	// Census 2010 population for New York
 
 			// if((Data.Population > 0) && (Data.Cases > 0))
 			if(Data.Population > 0)
@@ -298,6 +310,7 @@ function PrepData()
 
 		ReportDate[DateIndex].Prepped = true;
 
+		/*
 		console.log("For index " + DateIndex + " Dated " + ReportDate[DateIndex].Date);
 		for(y=0;y<MaxSummary;y++)
 		{
@@ -306,6 +319,7 @@ function PrepData()
 			console.log("Rank: " + y + " Cases per capita is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].Admin + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].Province);
 			console.log(" with " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].PerCapita + " per capita cases");
 		}
+		*/
 	}
 }
 
@@ -708,24 +722,33 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+(x%2?10:18));
 	}
 	
-	ctx.globalAlpha = 1.0;
-	ctx.strokeStyle = "red";
+	ctx.globalAlpha = 0.5;
+	ctx.strokeStyle = "darkred";
+	ctx.fillStyle = "darkred";
 	ctx.beginPath();
 	//ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries1[0]));
 	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
 	for(x=1;x<ValueSeries1.length;x++)
 		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
 	ctx.stroke();
+	ctx.closePath();
+	ctx.fill();
 
-	ctx.globalAlpha = 1.0;
-	ctx.strokeStyle = "black";
+	ctx.globalAlpha = 0.5;
+	ctx.strokeStyle = "white";
+	ctx.fillStyle = "black";
 	ctx.beginPath();
 	// ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries2[0]));
 	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries2[0]*YScale)));
 	for(x=1;x<ValueSeries2.length;x++)
 		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries2[x]*YScale)));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
 	ctx.stroke();
 	ctx.closePath();
+	ctx.fill();
 
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
@@ -863,6 +886,7 @@ function UpdateClickData(mx,my)
 			ClickData[ClickData.length] = Data;
 		}
 		Sort = 0;
+		ClickDataCategory = 1;
 	}
 	else
 	{
@@ -878,6 +902,7 @@ function UpdateClickData(mx,my)
 				ClickData[ClickData.length] = Data;
 			}
 			Sort = 0;
+			ClickDataCategory = 2;
 		}
 		else
 		{
@@ -901,6 +926,7 @@ function UpdateClickData(mx,my)
 				}
 			}
 			Sort = 1;
+			ClickDataCategory = 0;
 		}
 	}
 
@@ -1049,18 +1075,18 @@ function DrawClickData()
 			dy += FontSize;
 			ctx.fillStyle = "black";
 			ctx.fillText("Cases:",dx,dy);
-			ctx.fillStyle = "red";
+			ctx.fillStyle = "darkred";
 			ctx.fillText(ClickData[x].Cases,dx+StatColumn,dy);
 			dy += FontSize;
 			ctx.fillStyle = "black";
 			ctx.fillText("Deaths:",dx,dy);
-			ctx.fillStyle = "red";
+			ctx.fillStyle = "darkred";
 			ctx.fillText(ClickData[x].Deaths,dx+StatColumn,dy);
 			/*  // recovered data is always 0 in JH data.. (shrug..)
 			dy += FontSize;
 			ctx.fillStyle = "black";
 			ctx.fillText("Recovered:",dx,dy);
-			ctx.fillStyle = "red";
+			ctx.fillStyle = "darkred";
 			ctx.fillText(ClickData[x].Recovered,dx+StatColumn,dy);
 			*/
 			if(ClickData[x].Population != 0)
@@ -1068,19 +1094,19 @@ function DrawClickData()
 				dy += FontSize;
 				ctx.fillStyle = "black";
 				ctx.fillText("Cases Per Capita:",dx,dy);
-				ctx.fillStyle = "red";
+				ctx.fillStyle = "darkred";
 				z = (ClickData[x].PerCapita * 100).toFixed(3);
 				ctx.fillText(z + "%",dx+StatColumn,dy);
 				dy += FontSize;
 				ctx.fillStyle = "black";
 				ctx.fillText("Deaths Per Capita:",dx,dy);
-				ctx.fillStyle = "red";
+				ctx.fillStyle = "darkred";
 				z = (ClickData[x].DeathsPerCapita * 100).toFixed(3);
 				ctx.fillText(z + "%",dx+StatColumn,dy);
 				dy += FontSize;
 				ctx.fillStyle = "black";
 				ctx.fillText("Death Rate:",dx,dy);
-				ctx.fillStyle = "red";
+				ctx.fillStyle = "darkred";
 				z = (ClickData[x].DeathRate * 100).toFixed(3);
 				ctx.fillText(z + "%",dx+StatColumn,dy);
 			}
@@ -1145,17 +1171,14 @@ function DrawClickDataCounties()
 	ctx.fillText("Data Sources: Johns Hopkins University, United States Census",10,10);
 	ctx.font = "normal 16px Courier";
 	ctx.fillStyle = "black";
-	// ctx.fillText(DisplayOptions[DisplayIndex] + ", " + ReportDate[DateIndex].Date, 10, canvas.height-6);
-	ctx.fillText(DisplayOptions[DisplayIndex] + ", " + ReportDate[DateIndex].Date, 10, BottomDrawAreaStart - 30);
+	ctx.fillText(DisplayOptions[DisplayIndex] + ", " + ReportDate[DateIndex].Date, MapTitleLocation[0], MapTitleLocation[1]);
 	ctx.font = "normal 10px Courier";
-	ctx.fillStyle = "gray";
-	if(ClickData.length == 0)
-		ctx.fillText("Click on map for county level detail", 10, BottomDrawAreaStart - 18);
-	else
-		ctx.fillText("Click on map for other county level details", 10, BottomDrawAreaStart - 18);
+	ctx.fillStyle = "white";
+	ctx.fillText("Click on map for county level detail or", MapTitleLocation[0], MapTitleLocation[1]+24);
 }
 
 var ClickData = [];
+var ClickDataCategory;
 var Tolerance = 10;
 var RightDrawAreaStart = 1020;
 var BottomDrawAreaStart = 500;
@@ -1183,12 +1206,15 @@ var DisplayIndex = 0;
 var MaxSummary = 4;
 var SevereClickArea1 = [];
 SevereClickArea1[0] = 20;
-SevereClickArea1[1] = 400;
+SevereClickArea1[1] = 440;
 SevereClickArea1Radius = 8;
 var SevereClickArea2 = [];
 SevereClickArea2[0] = 20;
-SevereClickArea2[1] = 420;
+SevereClickArea2[1] = 460;
 SevereClickArea2Radius = 8;
+var MapTitleLocation = [];
+MapTitleLocation[0] = 10;
+MapTitleLocation[1] = 390;
 
 var xx,yy,zz;
 for(zz=0;zz<ReportDate.length;zz++)
