@@ -43,9 +43,9 @@
 
 </body>
 
-<script src=USBorders.js></script>
-<script src=Cities.js></script>
-<script src=USAData.js></script>
+<script src=Borders/USBorders.js></script>
+<script src=Borders/Cities.js></script>
+<script src=Ext/USAData.js></script>
 
 <script>
 
@@ -222,16 +222,22 @@ function DrawUSAMap()
 // figure out max values
 function PrepData()
 {
-	var x,y,z;
+	var di,x,y,z;
 	var TransLng,TransLat;
 
-	if(!ReportDate[DateIndex].Prepped)
+	for(di=0;di<ReportDate.length;di++)
+	// if(!ReportDate[DateIndex].Prepped)
 	{
-		for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+		for(x=0;x<ReportDate[di].Data.length;x++)
 		{
-			var Data = ReportDate[DateIndex].Data[x];
+			var Data = ReportDate[di].Data[x];
+
+			// round lat/long values to 6 digits - the higher precision digits appear to be inaccurate across different reporting days
+
+			Data.Long = Number(Number(Data.Long).toFixed(6));
+			Data.Lat = Number(Number(Data.Lat).toFixed(6));
 		
-			Data.ScaledCases = Math.floor(Math.sqrt(ReportDate[DateIndex].Data[x].Cases));
+			Data.ScaledCases = Math.floor(Math.sqrt(ReportDate[di].Data[x].Cases));
 
 			// make specific check to add population stats for New York City since it's not a county, but relevant to this display.
 			// this will let the chart calculations happen later in the logic even though it's county level logic.
@@ -262,53 +268,53 @@ function PrepData()
 				TransLng = MapToHeatMapX(Data.Long);
 				TransLat = MapToHeatMapY(Data.Lat);
 				if( (TransLng >= 0) && (TransLat >= 0) && 
-					(TransLng < ReportDate[DateIndex].CaseMap.length) && 
-					(TransLat < ReportDate[DateIndex].CaseMap[TransLng].length))
+					(TransLng < ReportDate[di].CaseMap.length) && 
+					(TransLat < ReportDate[di].CaseMap[TransLng].length))
 				{
-					ReportDate[DateIndex].CaseMap[TransLng][TransLat] += Data.Cases;
-					ReportDate[DateIndex].PopMap[TransLng][TransLat] += Data.Population;
+					ReportDate[di].CaseMap[TransLng][TransLat] += Data.Cases;
+					ReportDate[di].PopMap[TransLng][TransLat] += Data.Population;
 				}
 			}
 		}
 
-		ReportDate[DateIndex].MostPerCapitaIndex = new Array(MaxSummary);
-		ReportDate[DateIndex].MostCasesIndex = new Array(MaxSummary);
+		ReportDate[di].MostPerCapitaIndex = new Array(MaxSummary);
+		ReportDate[di].MostCasesIndex = new Array(MaxSummary);
 
 		for(y=0;y<MaxSummary;y++)
 		{
-			ReportDate[DateIndex].MostPerCapitaIndex[y] = 0;
-			ReportDate[DateIndex].MostCasesIndex[y] = 0;
+			ReportDate[di].MostPerCapitaIndex[y] = 0;
+			ReportDate[di].MostCasesIndex[y] = 0;
 		}
 
 		// now sort out worse off areas.
-		for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+		for(x=0;x<ReportDate[di].Data.length;x++)
 		{
-			var Data = ReportDate[DateIndex].Data[x];
+			var Data = ReportDate[di].Data[x];
 
 			for(z=0;z<MaxSummary;z++)
 			{
-				if(Data.Cases > ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex[z]].Cases)
+				if(Data.Cases > ReportDate[di].Data[ReportDate[di].MostCasesIndex[z]].Cases)
 				{
 					for(y=MaxSummary-1;y>z;y--)
-						ReportDate[DateIndex].MostCasesIndex[y] = ReportDate[DateIndex].MostCasesIndex[y-1];
-					ReportDate[DateIndex].MostCasesIndex[z] = x;
+						ReportDate[di].MostCasesIndex[y] = ReportDate[di].MostCasesIndex[y-1];
+					ReportDate[di].MostCasesIndex[z] = x;
 					break;
 				}
 			}
 
 			for(z=0;z<MaxSummary;z++)
 			{
-				if(Data.PerCapita > ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[z]].PerCapita)
+				if(Data.PerCapita > ReportDate[di].Data[ReportDate[di].MostPerCapitaIndex[z]].PerCapita)
 				{
 					for(y=MaxSummary-1;y>z;y--)
-						ReportDate[DateIndex].MostPerCapitaIndex[y] = ReportDate[DateIndex].MostPerCapitaIndex[y-1];
-					ReportDate[DateIndex].MostPerCapitaIndex[z] = x;
+						ReportDate[di].MostPerCapitaIndex[y] = ReportDate[di].MostPerCapitaIndex[y-1];
+					ReportDate[di].MostPerCapitaIndex[z] = x;
 					break;
 				}
 			}
 		}
 
-		ReportDate[DateIndex].Prepped = true;
+		ReportDate[di].Prepped = true;
 
 		/*
 		console.log("For index " + DateIndex + " Dated " + ReportDate[DateIndex].Date);
@@ -673,6 +679,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 	var x,y;
 	var Max = 0;
 	var XScale,YScale;
+	var GrowthPercent;
 
 	for(x=0;x<ValueSeries1.length;x++)
 	{
@@ -722,6 +729,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+(x%2?10:18));
 	}
 	
+	// draw series1 shape and fill
 	ctx.globalAlpha = 0.5;
 	ctx.strokeStyle = "darkred";
 	ctx.fillStyle = "darkred";
@@ -736,6 +744,48 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 	ctx.closePath();
 	ctx.fill();
 
+	// draw series1 growth shapes and fill **_**
+	ctx.globalAlpha = 0.5;
+	console.log("---");
+	for(x=1;x<ValueSeries1.length;x++)
+	{
+		if(ValueSeries1[x-1] == 0)
+			ctx.fillStyle = "gray";
+		else
+		{
+			GrowthPercent = Number((ValueSeries1[x] - ValueSeries1[x-1]) / ValueSeries1[x-1]);
+			if(GrowthPercent > 0.2)
+				ctx.fillStyle = GrowthRateColors[5];
+			else
+				if(GrowthPercent > 0.1)
+					ctx.fillStyle = GrowthRateColors[4];
+				else
+					if(GrowthPercent > 0.05)
+						ctx.fillStyle = GrowthRateColors[3];
+					else
+						if(GrowthPercent > 0.01)
+							ctx.fillStyle = GrowthRateColors[2];
+						else
+							if(GrowthPercent > 0.001)
+								ctx.fillStyle = GrowthRateColors[1];
+							else
+								if(GrowthPercent < 0)
+									ctx.fillStyle = "gray";	// invalid data
+								else
+									ctx.fillStyle = GrowthRateColors[0];
+			console.log("Growth percent = " + GrowthPercent + " fillstyle = " + ctx.fillStyle);
+		}
+		ctx.beginPath();
+		ctx.moveTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x-1]*YScale)));
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]);
+		ctx.lineTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]);
+		ctx.lineTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x-1]*YScale)));
+		ctx.closePath();
+		ctx.fill();
+	}
+
+	// draw series2 shape and fill
 	ctx.globalAlpha = 0.5;
 	ctx.strokeStyle = "white";
 	ctx.fillStyle = "black";
@@ -937,7 +987,8 @@ function UpdateClickData(mx,my)
 		{
 			for(y=0;y<ReportDate[x].Data.length;y++)
 			{
-				if(ReportDate[x].Data[y].FIPS == ClickData[z].FIPS)
+				if((ReportDate[x].Data[y].FIPS == ClickData[z].FIPS)||	// some counties (particularly in CA and TX) were not reporing the same FIPS code consistently
+				((ReportDate[x].Data[y].Lat == ClickData[z].Lat) && (ReportDate[x].Data[y].Long == ClickData[z].Long)))
 				{
 					ClickData[z].HistoryData[x] = ReportDate[x].Data[y];
 					break;
@@ -1189,6 +1240,7 @@ var CountyColors = [ "#1c1a6e","#696e1a","#1a6e28","#1b6769","#645c65","#ba4a00"
 var SeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff0000" ];
 var DeathSeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff4000", "#ff0000" ];
 var DeathRateColors = [ "#c0c0c0", "#a0a0a0", "#808080", "#404040", "#000000" ];
+var GrowthRateColors = [ "#ffffff", "#ffc0c0", "#ffa090", "#ff7050", "#ff3600", "#ff0000" ];
 var canvas = document.getElementById("USAMap");
 var ctx = canvas.getContext("2d");
 var DrawScaleFactor = 2;
@@ -1258,7 +1310,7 @@ DateSlider.oninput = function()
 	DateSet.innerHTML = ReportDate[DateIndex].Date;
 	ClearScreen();
 	// DrawUSAMap();
-	PrepData();
+	// PrepData();
 	if(ClickData.length != 0)
 		UpdateClickData(LastClickedX, LastClickedY);
 	DrawClickData();
