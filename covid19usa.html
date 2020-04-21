@@ -706,7 +706,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 	ctx.stroke();
 	ctx.lineWidth = 1;
 	ctx.font = "normal 6pt Courier";
-	ctx.strokeText(XYLabels[0],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]+SizeXY[1]+28);
+	ctx.strokeText(XYLabels[0],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]+SizeXY[1]+20);
 	ctx.strokeText(Max,TopLeft[0]+8,TopLeft[1]);
 	for(x=0;x<=ValueSeries1.length-1;x++)
 	{
@@ -724,9 +724,12 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]);
 		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]);
 		ctx.stroke();
-		ctx.globalAlpha = 1.0;
-		ctx.strokeStyle = "black";
-		ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+(x%2?10:18));
+		if((x % 5) == 0)
+		{
+			ctx.globalAlpha = 1.0;
+			ctx.strokeStyle = "black";
+			ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+10);
+		}
 	}
 	
 	// draw series1 shape and fill
