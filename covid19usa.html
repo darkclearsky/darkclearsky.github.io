@@ -4,15 +4,15 @@
 <style type="text/css">
 	.LText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: left; background-color: white; }
 	.RText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: right; background-color: white; }
-	.CText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: center; color: darkblue; background-color: white; }
+	.CText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: center; color: black; background-color: white; }
     .Table { display:table }
     .Row { display: table-row; background-color: white; height: 40px; }
     .Cell { display: table-cell; vertical-align: top; text-align: left; border: 0px solid black; padding-left: 5px; padding-right: 5px; }
     .MapCell { display: table-cell; column-span:2; vertical-align: top; border: 0px solid black; padding-left: 0px; padding-right: 0px; width:1000px}
 	.Slider { width: 300px; height: 15px; -webkit-appearance: none; -webkit-transition:0.2s; background-color:lightgray; outline:none; opacity:0.7s; transition: opacity 0.2s; }
 	.Slider:hover { opacity:1 }
-	.Slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 35px; height: 25px; background: darkblue; cursor: pointer; }
-	.Slider::-moz-range-thumb { width: 35px; height: 25px; background: darkblue; cursor: pointer; }
+	.Slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 35px; height: 25px; background: black; cursor: pointer; }
+	.Slider::-moz-range-thumb { width: 35px; height: 25px; background: black; cursor: pointer; }
 	.ShortSlider { width:100px; height: 25px; -webkit-appearance: none; -webkit-transition:0.2s; background-color:lightgray; outline:none; opacity:0.7s; transition: opacity 0.2s; }
 	.ShortSlider:hover { opacity:1 }
 	.ShortSlider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: #4CAF50; cursor: pointer; }
@@ -77,7 +77,8 @@ function ClearScreen()
 {
 	// clear canvas
 	ctx.globalAlpha = 1.0;
-	ctx.fillStyle = "darkgray";
+	// ctx.fillStyle = "darkgray";
+	ctx.fillStyle = "white";
 	ctx.fillRect(0,0,canvas.width,canvas.height);
 }
 
@@ -90,7 +91,7 @@ function DrawUSAMap()
 	ctx.lineWidth = 1;
 	// ctx.fillStyle = "#ffffff";
 	// ctx.strokeStyle = "#b2babb";
-	ctx.strokeStyle = "white";
+	ctx.strokeStyle = "black";
 	for(x=0;x<Object.keys(States).length;x++)
 	{
 		ctx.beginPath();
@@ -141,7 +142,7 @@ function DrawUSAMap()
 				else
 					Radius = 2;
 
-		ctx.fillStyle = "white";
+		ctx.fillStyle = "black";
 		ctx.beginPath();
 		ctx.arc(Lng,Lat,Radius,0,2*Math.PI);
 		ctx.fill();
@@ -178,7 +179,7 @@ function DrawUSAMap()
 	if(ClickDataCategory == 1)
 		ctx.fillStyle = "black";
 	else
-		ctx.fillStyle = "white";
+		ctx.fillStyle = "darkgray";
 	ctx.beginPath();
 	ctx.arc(SevereClickArea1[0],SevereClickArea1[1],SevereClickArea1Radius,0,2*Math.PI);
 	ctx.fill();
@@ -188,7 +189,7 @@ function DrawUSAMap()
 	if(ClickDataCategory == 2)
 		ctx.fillStyle = "black";
 	else
-		ctx.fillStyle = "white";
+		ctx.fillStyle = "darkgray";
 	ctx.beginPath();
 	ctx.arc(SevereClickArea2[0],SevereClickArea2[1],SevereClickArea2Radius,0,2*Math.PI);
 	ctx.fill();
@@ -333,9 +334,9 @@ function PrepData()
 function DrawCaseData()
 {
 	var Lat,Lng,c,x;
-	ctx.strokeStyle = "#000000";
-	ctx.globalAlpha = 0.3;
+	// ctx.strokeStyle = "#000000";
 	// ctx.globalAlpha = 1.0;
+	ctx.lineWidth = 1;
 	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
 	{
 		var Data = ReportDate[DateIndex].Data[x];
@@ -346,12 +347,15 @@ function DrawCaseData()
 		if(c >= SeverityColors.length)
 			c = SeverityColors.length-1;
 		ctx.fillStyle = SeverityColors[c];
+		ctx.strokeStyle = SeverityColors[c];
 		Lat = MapToCanvasY(Data.Lat);
 		Lng = MapToCanvasX(Data.Long);
 		ctx.beginPath();
 		ctx.arc(Lng,Lat,2+Math.floor(Data.ScaledCases/DrawScaleFactor),0,2*Math.PI);
+		ctx.globalAlpha = 0.1;
 		ctx.fill();
-		// ctx.stroke();
+		ctx.globalAlpha = 0.5;
+		ctx.stroke();
 		ctx.closePath();
 	}
 }
@@ -749,7 +753,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 
 	// draw series1 growth shapes and fill **_**
 	ctx.globalAlpha = 0.5;
-	console.log("---");
+	// console.log("---");
 	for(x=1;x<ValueSeries1.length;x++)
 	{
 		if(ValueSeries1[x-1] == 0)
@@ -776,7 +780,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 									ctx.fillStyle = "gray";	// invalid data
 								else
 									ctx.fillStyle = GrowthRateColors[0];
-			console.log("Growth percent = " + GrowthPercent + " fillstyle = " + ctx.fillStyle);
+			// console.log("Growth percent = " + GrowthPercent + " fillstyle = " + ctx.fillStyle);
 		}
 		ctx.beginPath();
 		ctx.moveTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x-1]*YScale)));
@@ -875,14 +879,16 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 		ctx.stroke();
 
 		// Draw separating line
+		/*
 		ctx.beginPath();
-		ctx.strokeStyle = "darkgray";
+		ctx.strokeStyle = "white";
 		ctx.lineWidth = 5;
 		cx = CenterX+((Radius * Math.cos(RadiansSoFar+Radians[x]))*1.2);
 		cy = CenterY+((Radius * Math.sin(RadiansSoFar+Radians[x]))*1.2);
 		ctx.moveTo(CenterX,CenterY);
 		ctx.lineTo(cx,cy);
 		ctx.stroke();
+		*/
 
 		RadiansSoFar += Radians[x];
 	}
@@ -1041,7 +1047,8 @@ function DrawClickData()
 	dx = RightDrawAreaStart;
 	dy = 100;
 	FontSize = 10;
-	ctx.fillStyle = "darkgray";
+	// ctx.fillStyle = "darkgray";
+	ctx.fillStyle = "white";
 	ctx.fillRect(RightDrawAreaStart,0,canvas.width-RightDrawAreaStart,canvas.height);
 	ctx.textAlign = "left";
 	ctx.textBaseline = "middle";
