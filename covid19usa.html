@@ -242,7 +242,7 @@ function PrepData()
 
 			// make specific check to add population stats for New York City since it's not a county, but relevant to this display.
 			// this will let the chart calculations happen later in the logic even though it's county level logic.
-			if(Data.Admin.localeCompare("New York City") == 0)
+			if(Data.Adm.localeCompare("New York City") == 0)
 				Data.Population = 8175133;	// Census 2010 population for New York
 
 			// if((Data.Population > 0) && (Data.Cases > 0))
@@ -321,9 +321,9 @@ function PrepData()
 		console.log("For index " + DateIndex + " Dated " + ReportDate[DateIndex].Date);
 		for(y=0;y<MaxSummary;y++)
 		{
-			console.log("Rank: " + y + " Cases is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex[y]].Admin + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex[y]].Province);
+			console.log("Rank: " + y + " Cases is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex[y]].Adm + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex[y]].Prov);
 			console.log(" with " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostCasesIndex[y]].Cases + " cases");
-			console.log("Rank: " + y + " Cases per capita is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].Admin + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].Province);
+			console.log("Rank: " + y + " Cases per capita is " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].Adm + ", " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].Prov);
 			console.log(" with " + ReportDate[DateIndex].Data[ReportDate[DateIndex].MostPerCapitaIndex[y]].PerCapita + " per capita cases");
 		}
 		*/
@@ -1007,7 +1007,7 @@ function UpdateClickData(mx,my)
 	}
 
 	if(Sort)
-		ClickData.sort(function(a,b) { return(a.Admin.localeCompare(b.Admin)); });
+		ClickData.sort(function(a,b) { return(a.Adm.localeCompare(b.Adm)); });
 }
 
 function MouseDown(Event)
@@ -1063,7 +1063,7 @@ function DrawClickData()
 		// pie charts
 		ctx.font = "normal 12px Courier";
 		ctx.fillStyle = "blue";
-		ctx.fillText("Geo " + Math.floor(ClickData[0].Lat) + " by " + Math.floor(ClickData[0].Long) + "(" + ClickData[0].Province + ")",dx-20,dy);
+		ctx.fillText("Geo " + Math.floor(ClickData[0].Lat) + " by " + Math.floor(ClickData[0].Long) + "(" + ClickData[0].Prov + ")",dx-20,dy);
 
 		dy += 16;
 		// ctx.fillText("Date " + ReportDate[DateIndex].Date,dx,dy);
@@ -1078,7 +1078,7 @@ function DrawClickData()
 		for(x=0;x<ClickData.length;x++)
 		{
 			Amounts[x] = ClickData[x].Cases;
-			Labels[x] = ClickData[x].Admin;
+			Labels[x] = ClickData[x].Adm;
 		}
 
 		dy += 80;
@@ -1108,18 +1108,18 @@ function DrawClickData()
 			ctx.fillStyle = CountyColors[x];
 			if(ClickData[x].SqMi!= 0)
 			{
-				if(ClickData[x].Province.localeCompare("Louisiana") == 0)
-					ctx.fillText(ClickData[x].Admin + " Parish",dx,dy);
+				if(ClickData[x].Prov.localeCompare("Louisiana") == 0)
+					ctx.fillText(ClickData[x].Adm + " Parish",dx,dy);
 				else
-					ctx.fillText(ClickData[x].Admin + " County",dx,dy);
+					ctx.fillText(ClickData[x].Adm + " County",dx,dy);
 			}
 			else
-					ctx.fillText(ClickData[x].Admin,dx,dy);
+					ctx.fillText(ClickData[x].Adm,dx,dy);
 
 			dy += FontSize;
 			ctx.font = "normal 8px Courier";
 			ctx.fillStyle = "gray";
-			ctx.fillText(ClickData[x].Province,dx,dy);
+			ctx.fillText(ClickData[x].Prov,dx,dy);
 			if(ClickData[x].Population != 0)
 			{
 				dy += FontSize;
