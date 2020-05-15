@@ -243,13 +243,13 @@ function PrepData()
 			// make specific check to add population stats for New York City since it's not a county, but relevant to this display.
 			// this will let the chart calculations happen later in the logic even though it's county level logic.
 			if(Data.Adm.localeCompare("New York City") == 0)
-				Data.Population = 8175133;	// Census 2010 population for New York
+				Data.Pop = 8175133;	// Census 2010 population for New York
 
-			// if((Data.Population > 0) && (Data.Cases > 0))
-			if(Data.Population > 0)
+			// if((Data.Pop > 0) && (Data.Cases > 0))
+			if(Data.Pop > 0)
 			{
-				Data.PerCapita = Data.Cases / Data.Population;
-				Data.DeathsPerCapita = Data.Deaths / Data.Population;
+				Data.PerCapita = Data.Cases / Data.Pop;
+				Data.DeathsPerCapita = Data.Deaths / Data.Pop;
 				if(Data.Cases > 0)
 					Data.DeathRate = Data.Deaths / Data.Cases;
 				else
@@ -273,7 +273,7 @@ function PrepData()
 					(TransLat < ReportDate[di].CaseMap[TransLng].length))
 				{
 					ReportDate[di].CaseMap[TransLng][TransLat] += Data.Cases;
-					ReportDate[di].PopMap[TransLng][TransLat] += Data.Population;
+					ReportDate[di].PopMap[TransLng][TransLat] += Data.Pop;
 				}
 			}
 		}
@@ -1120,12 +1120,12 @@ function DrawClickData()
 			ctx.font = "normal 8px Courier";
 			ctx.fillStyle = "gray";
 			ctx.fillText(ClickData[x].Prov,dx,dy);
-			if(ClickData[x].Population != 0)
+			if(ClickData[x].Pop!= 0)
 			{
 				dy += FontSize;
 				ctx.fillStyle = "green";
-				ctx.fillText("Population:",dx,dy);
-				ctx.fillText(ClickData[x].Population,dx+StatColumn,dy);
+				ctx.fillText("Pop:",dx,dy);
+				ctx.fillText(ClickData[x].Pop,dx+StatColumn,dy);
 			}
 			if(ClickData[x].SqMi!= 0)
 			{
@@ -1150,7 +1150,7 @@ function DrawClickData()
 			ctx.fillStyle = "darkred";
 			ctx.fillText(ClickData[x].Recovered,dx+StatColumn,dy);
 			*/
-			if(ClickData[x].Population != 0)
+			if(ClickData[x].Pop!= 0)
 			{
 				dy += FontSize;
 				ctx.fillStyle = "black";
@@ -1173,7 +1173,7 @@ function DrawClickData()
 			}
 
 			dy += 5;
-			if(ClickData[x].Population != 0)
+			if(ClickData[x].Pop!= 0)
 			{
 				// XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries2)
 				ChartCases.length = 0;
