@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html>
+<meta charset = "UTF-8">
+<style type="text/css">
+	.LText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: left; background-color: white; }
+	.RText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: right; background-color: white; }
+	.CText { font-family: Courier; font-size:16px; font-weight:bold; vertical-align: top; text-align: center; color: black; background-color: white; }
+    .Table { display:table }
+    .Row { display: table-row; background-color: white; height: 40px; }
+    .Cell { display: table-cell; vertical-align: top; text-align: left; border: 0px solid black; padding-left: 5px; padding-right: 5px; }
+    .CharCell { display: table-cell; column-span:2; vertical-align: top; border: 0px solid black; padding-left: 0px; padding-right: 0px; width:1000px}
+</style>
+<body>
+<div class = "Table">
+	<div class = "Row">
+			<div class = "Cell" id="RefreshThis">
+				<div class = "LText" id="DataDate">Loading...</div>
+				<!-- <label class = "LText">Select State</label> -->
+				<select hidden class="LText" id="StateSelect"><option>Loading...</option></select>
+				<!-- <label class = "LText">Select county</label> -->
+				<select hidden class="LText" id="CountySelect"></select>
+			</div>
+	</div>
+	<div class = "Row">
+		<div class = "ChartCell">
+			<canvas id="ChartArea" width=1000 height=600 style="border:0px solid #ffffff; background-color:white;">
+			Your browser does not support HTML5
+			</canvas>
+		</div>
+	</div>
+</div>
+
+</body>
+
+<script src=USAData.js></script>
+
+<script>
+
+function DecToHex(h)
+{
+	if(h < 0)
+		return("00");
+	if(h < 15)
+		return("0" + h.toString(16));
+	if(h > 255)
+		return("ff");
+	return(h.toString(16));
+}
+
+function ClearScreen()
+{
+	// clear canvas
+	ctx.globalAlpha = 1.0;
+	ctx.fillStyle = "white";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function PrepData()
+{
+	var di,x,y,z;
+	var TransLng,TransLat;
+
+	for(di=0;di<ReportDate.length;di++)
+	// if(!ReportDate[DateIndex].Prepped)
+	{
+		for(x=0;x<ReportDate[di].Data.length;x++)
+		{
+			var Data = ReportDate[di].Data[x];
+
+			// round lat/long values to 6 digits - the higher precision digits appear to be inaccurate across different reporting days
+
+			// Data.Long = Number(Number(Data.Long).toFixed(6));
+			// Data.Lat = Number(Number(Data.Lat).toFixed(6));
+		
+			Data.ScaledCases = Math.floor(Math.sqrt(ReportDate[di].Data[x].Cases));
+
+			// make specific check to add population stats for New York City since it's not a county, but relevant to this display.
+			// this will let the chart calculations happen later in the logic even though it's county level logic.
+			if(Data.Adm.localeCompare("New York City") == 0)
+				Data.Pop= 8175133;	// Census 2010 population for New York
+
+			// if((Data.Pop> 0) && (Data.Cases > 0))
+			if(Data.Pop> 0)
+			{
+				Data.PerCapita = Data.Cases / Data.Pop;
+				Data.DeathsPerCapita = Data.Deaths / Data.Pop;
+				if(Data.Cases > 0)
+					Data.DeathRate = Data.Deaths / Data.Cases;
+				else
+					Data.DeathRate = 0;
+				// console.log("dr = " + Data.DeathRate + " d = " + Data.Deaths + " c = " + Data.Cases);
+			}
+			else
+			{
+				Data.PerCapita = 0;
+				Data.DeathsPerCapita = 0;
+				Data.DeathRate = 0;
+			}
+		}
+
+		ReportDate[di].Prepped = true;
+	}
+}
+
+function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries2, Option)
+{
+	var x,y;
+	var Max = 0;
+	var XScale,YScale;
+	var GrowthPercent;
+	var TextYOffset;
+	var RunningAverage = [];
+	var RunningAveragePeriods = 10;
+
+	for(x=0;x<ValueSeries1.length;x++)
+	{
+		if(Max < ValueSeries1[x])
+			Max = ValueSeries1[x];
+		if(Max < ValueSeries2[x])
+			Max = ValueSeries2[x];
+	}
+
+	YScale = SizeXY[1] / Max;
+	XScale = SizeXY[0] / (ValueSeries1.length-1);	// subtract 1 because Y axis is first point on scale
+
+	ctx.globalAlpha = 1.0;
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = 2;
+	ctx.textAlign = "center";
+	ctx.textBaseline = "bottom";
+
+	ctx.beginPath();
+	ctx.moveTo(TopLeft[0],TopLeft[1]);
+	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+	// ctx.closePath();
+	ctx.stroke();
+	ctx.lineWidth = 1;
+	if(SizeXY[0] > 150)
+	{
+		ctx.font = "normal 10pt Courier";
+		TextYOffset = 14;
+	}
+	else
+	{
+		ctx.font = "normal 6pt Courier";
+		TextYOffset = 10;
+	}
+	ctx.strokeText(XYLabels[0],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]+SizeXY[1]+(TextYOffset*2));
+	ctx.strokeText(XYLabels[1],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]);
+
+	ctx.textAlign="right";
+	ctx.strokeText((Max/2).toFixed(0),TopLeft[0]-6,TopLeft[1]+(SizeXY[1]/2));
+	ctx.strokeText(((Max/2)+(Max/4)).toFixed(0),TopLeft[0]-6,TopLeft[1]+(SizeXY[1]/4));
+	ctx.strokeText((Max/4).toFixed(0),TopLeft[0]-6,TopLeft[1]+(SizeXY[1]/2)+(SizeXY[1]/4));
+	ctx.strokeText(Max,TopLeft[0]+8,TopLeft[1]);
+	ctx.textAlign="center";
+	for(x=0;x<=ValueSeries1.length-1;x++)
+	{
+		if(x == XEmphasis)
+		{
+			ctx.globalAlpha = 1.0;
+			ctx.strokeStyle = "green";
+		}
+		else
+		{
+			ctx.globalAlpha = 0.5;
+			ctx.strokeStyle = "gray";
+		}
+		ctx.beginPath();
+		ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]);
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]);
+		ctx.stroke();
+		if((x % 5) == 0)
+		{
+			ctx.globalAlpha = 1.0;
+			ctx.strokeStyle = "black";
+			ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+TextYOffset);
+		}
+
+	}
+
+	// draw series1 shape and fill
+	ctx.globalAlpha = 0.5;
+	ctx.strokeStyle = "darkred";
+	ctx.fillStyle = "darkred";
+	ctx.beginPath();
+	//ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries1[0]));
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
+	for(x=1;x<ValueSeries1.length;x++)
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
+	ctx.stroke();
+	ctx.closePath();
+	ctx.fill();
+
+	if(Option == 0)	// do 10 day running average
+	{
+		var GoBack;
+		for(x=0;x<ValueSeries1.length;x++)
+		{
+			if(x < RunningAveragePeriods)
+				GoBack = 0;
+			else
+				GoBack = x - RunningAveragePeriods;
+
+			RunningAverage[x] = 0;
+			for(y=GoBack;y<x;y++)
+				RunningAverage[x] += ValueSeries1[y];
+			if(x != 0)
+				RunningAverage[x] /= (x - GoBack);
+		}
+		ctx.globalAlpha = 0.5;
+		ctx.strokeStyle = "black";
+		ctx.beginPath();
+		ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(RunningAverage[0]*YScale)));
+		for(x=1;x<RunningAverage.length;x++)
+			ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(RunningAverage[x]*YScale)));
+		ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+		ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
+		ctx.stroke();
+	}
+	
+	if(Option == 1)
+	{
+		// draw series1 growth shapes and fill **_**
+		ctx.globalAlpha = 0.5;
+		// console.log("---");
+		for(x=1;x<ValueSeries1.length;x++)
+		{
+			if(ValueSeries1[x-1] == 0)
+				ctx.fillStyle = "gray";
+			else
+			{
+				GrowthPercent = Number((ValueSeries1[x] - ValueSeries1[x-1]) / ValueSeries1[x-1]);
+				if(GrowthPercent > 0.2)
+					ctx.fillStyle = GrowthRateColors[5];
+				else
+					if(GrowthPercent > 0.1)
+						ctx.fillStyle = GrowthRateColors[4];
+					else
+						if(GrowthPercent > 0.05)
+							ctx.fillStyle = GrowthRateColors[3];
+						else
+							if(GrowthPercent > 0.01)
+								ctx.fillStyle = GrowthRateColors[2];
+							else
+								if(GrowthPercent > 0.001)
+									ctx.fillStyle = GrowthRateColors[1];
+								else
+									if(GrowthPercent < 0)
+										ctx.fillStyle = "gray";	// invalid data
+									else
+										ctx.fillStyle = GrowthRateColors[0];
+				// console.log("Growth percent = " + GrowthPercent + " fillstyle = " + ctx.fillStyle);
+			}
+			ctx.beginPath();
+			ctx.moveTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x-1]*YScale)));
+			ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+			ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]);
+			ctx.lineTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]);
+			ctx.lineTo(TopLeft[0]+(XScale*(x-1)),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x-1]*YScale)));
+			ctx.closePath();
+			ctx.fill();
+		}
+	}
+
+	// draw series2 shape and fill
+	ctx.globalAlpha = 0.5;
+	ctx.strokeStyle = "white";
+	ctx.fillStyle = "black";
+	ctx.beginPath();
+	// ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries2[0]));
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries2[0]*YScale)));
+	for(x=1;x<ValueSeries2.length;x++)
+		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries2[x]*YScale)));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
+	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
+	ctx.stroke();
+	ctx.closePath();
+	ctx.fill();
+
+	ctx.textAlign = "left";
+	ctx.textBaseline = "bottom";
+}
+
+function Pie(CenterX, CenterY, Radius, Amounts, Labels)
+{
+	var x,y;
+	var cx,cy;
+	var lx,ly;
+	var Total = 0;
+	var Percents = [];
+	var Radians = [];
+	var LineWidth = 20;
+	var RadiansSoFar = 0;
+ 
+	var Color1 = "#7878A0";
+	var Color2 = "#404080";
+	var Color3 = "#9090C0";
+ 
+	for(x=0;x<Amounts.length;x++)
+	{
+		Total += Amounts[x];
+	}
+
+	if(Total == 0)
+	{
+		ctx.textAlign = "center";
+		ctx.textBaseline = "bottom";
+		ctx.fillStyle = "10px Courier black";
+		ctx.fillText("(No data to report)",CenterX,CenterY);
+		ctx.textAlign = "left";
+		ctx.textBaseline = "bottom";
+		return;
+	}
+ 
+	for(x=0;x<Amounts.length;x++)
+	{
+		Percents[x] = Amounts[x] / Total;
+	}
+ 
+	for(x=0;x<Amounts.length;x++)
+	{
+		Radians[x] = Percents[x] * (Math.PI * 2);
+	}
+ 
+	// ctx.font = "normal 8pt Courier";
+	// ctx.setBaseline = "top";
+	// ctx.textBaseline="middle";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "bottom";
+	for(x=0;x<Amounts.length;x++)
+	{
+		// draw arc of graph
+		// ctx.fillStyle = ctx.strokeStyle = x==0?Color3:(x%2)==1?Color1:Color2;
+		ctx.strokeStyle = ctx.fillStyle = CountyColors[x];
+		ctx.beginPath();
+		ctx.lineWidth = LineWidth;
+		ctx.arc(CenterX,CenterY,Radius,RadiansSoFar,RadiansSoFar + Radians[x]);
+		ctx.stroke();
+ 
+		// draw label line and label
+		ctx.beginPath();
+		ctx.lineWidth = 2;
+		lx = cx = CenterX + (Radius * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		ly = cy = CenterY + (Radius * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		ctx.moveTo(cx,cy);
+		cx = CenterX + ((Radius+10) * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		cy = CenterY + ((Radius+10) * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		ctx.lineTo(cx,cy);
+		ctx.stroke();
+
+		// Draw separating line
+		ctx.beginPath();
+		ctx.strokeStyle = "darkgray";
+		ctx.lineWidth = 5;
+		cx = CenterX+((Radius * Math.cos(RadiansSoFar+Radians[x]))*1.2);
+		cy = CenterY+((Radius * Math.sin(RadiansSoFar+Radians[x]))*1.2);
+		ctx.moveTo(CenterX,CenterY);
+		ctx.lineTo(cx,cy);
+		ctx.stroke();
+
+		RadiansSoFar += Radians[x];
+	}
+
+	// draw labels on top of pie segments
+	RadiansSoFar = 0;
+	ctx.lineWidth = 1;
+	ctx.fillStyle = "black";
+	ctx.strokeStyle = "white";
+	for(x=0;x<Amounts.length;x++)
+	{
+		cx = CenterX + ((Radius+10) * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		cy = CenterY + ((Radius+10) * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		ctx.strokeText(Labels[x],cx,cy);
+		ctx.fillText(Labels[x],cx,cy);
+		RadiansSoFar += Radians[x];
+	}
+
+	// draw total amount in center
+	ctx.fillStyle = "black";
+	ctx.strokeStyle = "white";
+	ctx.strokeText(Total,CenterX,CenterY);
+	ctx.fillText(Total,CenterX,CenterY);
+
+	ctx.textAlign = "left";
+	ctx.textBaseline = "bottom";
+}
+
+var CountyColors = [ "#1c1a6e","#696e1a","#1a6e28","#1b6769","#645c65","#ba4a00" ];
+var SeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff0000" ];
+var DeathSeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff4000", "#ff0000" ];
+var DeathRateColors = [ "#c0c0c0", "#a0a0a0", "#808080", "#404040", "#000000" ];
+var GrowthRateColors = [ "#ffffff", "#ffc0c0", "#ffa090", "#ff7050", "#ff3600", "#ff0000" ];
+var canvas = document.getElementById("ChartArea");
+var ctx = canvas.getContext("2d");
+var DateIndex = ReportDate.length-1;	// Start with latest date in set
+var StateIndex;
+var CountyIndex;
+var DisplayIndex = 0;
+var ClickData;
+var x,y,z;
+
+for(x=0;x<ReportDate.length;x++)
+	ReportDate[x].Prepped = false;
+
+ClearScreen();
+PrepData();
+
+var DateText = document.getElementById("DataDate");
+DateText.innerHTML = "Data from " + ReportDate[0].Date + " to " + ReportDate[DateIndex].Date;
+var StateSelect = document.getElementById("StateSelect");
+var SortedData = ReportDate[DateIndex].Data.sort(function(a,b) { return a.Prov.localeCompare(b.Prov) } );
+var StateElem = document.createElement("option");
+StateSelect.options.length = 0;
+StateSelect.style.display = "inline";
+StateElem.text = "Pick a state";
+StateSelect.options.add(StateElem,0);
+for(z=1,x=0;x<SortedData.length;x++)
+{
+	for(y=x+1;y<SortedData.length;y++)
+	{
+		if(SortedData[x].Prov.localeCompare(SortedData[y].Prov) != 0)
+		{
+			StateElem = document.createElement("option");
+			StateElem.text = SortedData[y].Prov;
+			StateSelect.options.add(StateElem,z++);
+			x = y-1;
+			break;
+		}
+	}
+}
+
+function DrawCountyData()
+{
+	var dx,dy;
+	var x,y;
+	var z;
+	var StatColumn = 200;
+	var FontSize = 14;
+	var Amounts = [];
+	var Labels = [];
+	var ChartCases = [];
+	var ChartFatalities = [];
+
+	// Detailed stats
+	dx = 20;
+	dy = 30;
+
+	ctx.globalAlpha = 1.0;
+	ctx.font = "normal 18px Courier";
+	ctx.fillStyle = "blue";
+	// ctx.fillStyle = CountyColors[x];
+	if((ClickData.SqMi!= 0) && (ClickData.Adm.localeCompare(ClickData.Prov)!=0))
+	{
+		if(ClickData.Prov.localeCompare("Louisiana") == 0)
+			ctx.fillText(ClickData.Adm + " Parish",dx,dy);
+		else
+			ctx.fillText(ClickData.Adm + " County",dx,dy);
+	}
+	else
+	{
+			ctx.fillText(ClickData.Adm,dx,dy);
+	}
+
+	dy += FontSize;
+	ctx.font = "normal 12px Courier";
+	ctx.fillStyle = "gray";
+	ctx.fillText(ClickData.Prov,dx,dy);
+	dy += FontSize;
+
+	if(ClickData.Pop!= 0)
+	{
+		dy += FontSize;
+		ctx.fillStyle = "green";
+		ctx.fillText("Pop:",dx,dy);
+		ctx.fillText(ClickData.Pop,dx+StatColumn,dy);
+	}
+	if(ClickData.SqMi!= 0)
+	{
+		dy += FontSize;
+		ctx.fillText("Square Miles:",dx,dy);
+		ctx.fillText(ClickData.SqMi,dx+StatColumn,dy);
+	}
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("Total Cases:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.Cases,dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("Total Fatalities:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.Deaths,dx+StatColumn,dy);
+
+	if(ClickData.Pop!= 0)
+	{
+		dy += FontSize;
+		ctx.fillStyle = "black";
+		ctx.fillText("Cases Per Capita:",dx,dy);
+		ctx.fillStyle = "darkred";
+		z = (ClickData.PerCapita * 100).toFixed(3);
+		ctx.fillText(z + "%",dx+StatColumn,dy);
+		dy += FontSize;
+		ctx.fillStyle = "black";
+		ctx.fillText("Fatalities Per Capita:",dx,dy);
+		ctx.fillStyle = "darkred";
+		z = (ClickData.DeathsPerCapita * 100).toFixed(3);
+		ctx.fillText(z + "%",dx+StatColumn,dy);
+		dy += FontSize;
+		ctx.fillStyle = "black";
+		ctx.fillText("Fatality Rate:",dx,dy);
+		ctx.fillStyle = "darkred";
+		z = (ClickData.DeathRate * 100).toFixed(3);
+		ctx.fillText(z + "%",dx+StatColumn,dy);
+	}
+
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("New Cases Today:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.DeltaCases,dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("New Fatalities Today:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.DeltaDeaths,dx+StatColumn,dy);
+
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("10 Day Avg New Cases:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.RunningAverageCases.toFixed(3),dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("10 Day Avg New Fatalities:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.RunningAverageDeaths.toFixed(3),dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("10 Day Case Trend:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.TrendCases.toFixed(3),dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("10 Day Fatality Trend:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.TrendDeaths.toFixed(3),dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("Case Trend Direction:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.TrendCases==0?"Even":ClickData.TrendCases<0?"Down":"Up",dx+StatColumn,dy);
+	dy += FontSize;
+	ctx.fillStyle = "black";
+	ctx.fillText("Fatality Trend Direction:",dx,dy);
+	ctx.fillStyle = "darkred";
+	ctx.fillText(ClickData.TrendDeaths==0?"Even":ClickData.TrendDeaths<0?"Down":"Up",dx+StatColumn,dy);
+
+	ctx.textAlign = "left";
+	ctx.textBaseline = "bottom";
+}
+
+function RefreshOptionFields()
+{
+	// this ugliness was required because select/options don't refresh correctly in firefox
+	var RefreshArea = document.getElementById("RefreshThis");
+	var OldStyle = RefreshArea.style.display;
+	RefreshArea.style.display = "none";
+	setTimeout(function() { RefreshArea.style.display = OldStyle }, 100);
+}
+
+StateSelect.onchange = function()
+{
+	var Found = false;
+	var CountyElem;
+
+	StateIndex = StateSelect.selectedIndex;
+	var State = StateSelect[StateIndex].text;
+
+	CountySelect.options.length = 0;
+	CountyElem = document.createElement("option");
+	CountyElem.text = "then pick a county";
+	CountySelect.options.add(CountyElem,0);
+
+	for(z=1,x=0;x<SortedData.length;x++)
+	{
+		if(SortedData[x].Prov.localeCompare(State)==0)
+		{
+			Found = true;
+			CountyElem = document.createElement("option");
+			CountyElem.text = SortedData[x].Adm;
+			CountySelect.options.add(CountyElem,z++);
+		}
+		else
+		{
+			if(Found)
+				break;
+		}
+	}
+	RefreshOptionFields();
+}
+
+var CountySelect = document.getElementById("CountySelect");
+CountySelect.style.display = "inline";
+CountySelect.onchange = function()
+{
+	var ChartDim = [500,350];
+	var ChartLoc = [340,50];
+
+	RefreshOptionFields();
+
+	CountyIndex = CountySelect.selectedIndex;
+	var State = StateSelect[StateIndex].text;
+	var County = CountySelect[CountyIndex].text;
+
+	// we have to find out county data array
+	var DataArray = ReportDate[DateIndex].Data;
+	for(x=0;x<DataArray.length;x++)
+	{
+		if(	(DataArray[x].Adm.localeCompare(County) == 0) &&
+			(DataArray[x].Prov.localeCompare(State) == 0))
+		{
+			ClickData = DataArray[x];
+			break;
+		}
+	}
+
+	if(x == ReportDate[DateIndex].length)
+	{
+		console.log(State + " " + County + " was not found");
+		return;
+	}
+	
+	// now get history data for that county
+	var UndefinedData = { Cases : 0, Deaths : 0 };
+	ClickData.HistoryData = new Array(ReportDate.length);	// for tying clickdata to other dates for graphs
+	for(x=0;x<ReportDate.length;x++)
+	{
+		for(y=0;y<ReportDate[x].Data.length;y++)
+		{
+			if(	(ReportDate[x].Data[y].FIPS == ClickData.FIPS)||	// some counties (particularly in CA and TX) were not reporing the same FIPS code consistently
+				((ReportDate[x].Data[y].Lat == ClickData.Lat) && (ReportDate[x].Data[y].Long == ClickData.Long)))
+			{
+				ClickData.HistoryData[x] = ReportDate[x].Data[y];
+				break;
+			}
+		}
+		if(y == ReportDate[x].Data.length)	// was it not found?
+			ClickData.HistoryData[x] = UndefinedData;
+	}
+
+	// Create some addition stats based on history
+
+	// delta from prior date
+	for(x=0;x<ClickData.HistoryData.length;x++)
+	{
+		if(x == 0)
+		{
+			ClickData.HistoryData[x].DeltaCases = 0;
+			ClickData.HistoryData[x].DeltaDeaths = 0;
+		}
+		else
+		{
+			ClickData.HistoryData[x].DeltaCases = ClickData.HistoryData[x].Cases - ClickData.HistoryData[x-1].Cases;
+			if(ClickData.HistoryData[x].DeltaCases < 0)
+				ClickData.HistoryData[x].DeltaCases = 0;
+
+			ClickData.HistoryData[x].DeltaDeaths = ClickData.HistoryData[x].Deaths - ClickData.HistoryData[x-1].Deaths;
+			if(ClickData.HistoryData[x].DeltaDeaths < 0)
+				ClickData.HistoryData[x].DeltaDeaths = 0;
+		}
+	}
+
+	// 10 day running average
+	var RunningAverageDays = 10;
+	for(x=0;x<ClickData.HistoryData.length;x++)
+	{
+		ClickData.HistoryData[x].RunningAverageCases = 0;
+		ClickData.HistoryData[x].RunningAverageDeaths = 0;
+		if(x < RunningAverageDays)
+		{
+			for(y=0;y<=x;y++)
+			{
+				ClickData.HistoryData[x].RunningAverageCases += ClickData.HistoryData[y].DeltaCases;
+				ClickData.HistoryData[x].RunningAverageDeaths += ClickData.HistoryData[y].DeltaDeaths;
+			}
+			ClickData.HistoryData[x].RunningAverageCases /= (x+1);
+			ClickData.HistoryData[x].RunningAverageDeaths /= (x+1);
+		}
+		else
+		{
+			for(y=x-RunningAverageDays;y<=x;y++)
+			{
+				ClickData.HistoryData[x].RunningAverageCases += ClickData.HistoryData[y].DeltaCases;
+				ClickData.HistoryData[x].RunningAverageDeaths += ClickData.HistoryData[y].DeltaDeaths;
+			}
+			ClickData.HistoryData[x].RunningAverageCases /= (RunningAverageDays+1);
+			ClickData.HistoryData[x].RunningAverageDeaths /= (RunningAverageDays+1);
+		}
+
+		if(x == 0)
+		{
+			ClickData.HistoryData[x].TrendCases = 0;
+			ClickData.HistoryData[x].TrendDeaths = 0;
+		}
+		else
+		{
+			ClickData.HistoryData[x].TrendCases = ClickData.HistoryData[x].RunningAverageCases - ClickData.HistoryData[x-1].RunningAverageCases;
+			ClickData.HistoryData[x].TrendDeaths = ClickData.HistoryData[x].RunningAverageDeaths - ClickData.HistoryData[x-1].RunningAverageDeaths;
+		}
+	}
+
+	// Now go through history data and create chart series
+	var Cases = [];
+	var Deaths = [];
+	var DeltaCases = [];
+	var DeltaDeaths = [];
+
+	for(x=0;x<ClickData.HistoryData.length;x++)
+	{
+		Cases[x] = ClickData.HistoryData[x].Cases;
+		Deaths[x] = ClickData.HistoryData[x].Deaths;
+		DeltaCases[x] = ClickData.HistoryData[x].DeltaCases;
+		DeltaDeaths[x] = ClickData.HistoryData[x].DeltaDeaths;
+	}
+
+	ClearScreen();
+	
+	DrawCountyData();
+
+	XYChart(ChartLoc,ChartDim,ReportDate.length-1,["Days since 3/22","Total Cases"],Cases,Deaths,1);
+
+	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]/3],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+}
+
+</script>
+
+</html>
