@@ -49,6 +49,7 @@
 <script src=USAData_60.js></script>
 <script src=USAData_61.js></script>
 <script src=USAData_62.js></script>
+<script src=USAData_63.js></script>
 
 <script>
 
@@ -731,7 +732,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]);
 		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]);
 		ctx.stroke();
-		if((x % 5) == 0)
+		if((x % 10) == 0)
 		{
 			ctx.globalAlpha = 1.0;
 			ctx.strokeStyle = "black";
