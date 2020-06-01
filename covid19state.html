@@ -23,7 +23,7 @@
 	</div>
 	<div class = "Row">
 		<div class = "ChartCell">
-			<canvas id="ChartArea" width=1000 height=600 style="border:0px solid #ffffff; background-color:white;">
+			<canvas id="ChartArea" width=1000 height=900 style="border:0px solid #ffffff; background-color:white;">
 			Your browser does not support HTML5
 			</canvas>
 		</div>
@@ -43,6 +43,7 @@
 <script src=USAData_67.js></script>
 <script src=USAData_68.js></script>
 <script src=USAData_69.js></script>
+<script src=USAData_70.js></script>
 
 <script>
 
@@ -743,7 +744,8 @@ CountySelect.onchange = function()
 
 	XYChart(ChartLoc,ChartDim,ReportDate.length-1,["Days since 3/22","Total Cases"],Cases,Deaths,1);
 
-	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]/3],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+	// XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]/3],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
 }
 
 </script>
