@@ -16,9 +16,7 @@
 			<div class = "Cell" id="RefreshThis">
 				<div class = "LText" id="DataDate">Loading...</div>
 				<!-- <label class = "LText">Select State</label> -->
-				<select hidden class="LText" id="StateSelect"><option>Loading...</option></select>
-				<!-- <label class = "LText">Select county</label> -->
-				<select hidden class="LText" id="CountySelect"></select>
+				<select hidden class="LText" id="CountrySelect"><option>Loading...</option></select>
 			</div>
 	</div>
 	<div class = "Row">
@@ -32,22 +30,81 @@
 
 </body>
 
-<script src=USAData.js></script>
-<script src=USAData_60.js></script>
-<script src=USAData_61.js></script>
-<script src=USAData_62.js></script>
-<script src=USAData_63.js></script>
-<script src=USAData_64.js></script>
-<script src=USAData_65.js></script>
-<script src=USAData_66.js></script>
-<script src=USAData_67.js></script>
-<script src=USAData_68.js></script>
-<script src=USAData_69.js></script>
-<script src=USAData_70.js></script>
-<script src=USAData_71.js></script>
-<script src=USAData_72.js></script>
-<script src=USAData_73.js></script>
-<script src=USAData_74.js></script>
+<script src=Ext/IntData_0.js></script>
+<script src=Ext/IntData_1.js></script>
+<script src=Ext/IntData_2.js></script>
+<script src=Ext/IntData_3.js></script>
+<script src=Ext/IntData_4.js></script>
+<script src=Ext/IntData_5.js></script>
+<script src=Ext/IntData_6.js></script>
+<script src=Ext/IntData_7.js></script>
+<script src=Ext/IntData_8.js></script>
+<script src=Ext/IntData_9.js></script>
+<script src=Ext/IntData_10.js></script>
+<script src=Ext/IntData_11.js></script>
+<script src=Ext/IntData_12.js></script>
+<script src=Ext/IntData_13.js></script>
+<script src=Ext/IntData_14.js></script>
+<script src=Ext/IntData_15.js></script>
+<script src=Ext/IntData_16.js></script>
+<script src=Ext/IntData_17.js></script>
+<script src=Ext/IntData_18.js></script>
+<script src=Ext/IntData_19.js></script>
+<script src=Ext/IntData_20.js></script>
+<script src=Ext/IntData_21.js></script>
+<script src=Ext/IntData_22.js></script>
+<script src=Ext/IntData_23.js></script>
+<script src=Ext/IntData_24.js></script>
+<script src=Ext/IntData_25.js></script>
+<script src=Ext/IntData_26.js></script>
+<script src=Ext/IntData_27.js></script>
+<script src=Ext/IntData_28.js></script>
+<script src=Ext/IntData_29.js></script>
+<script src=Ext/IntData_30.js></script>
+<script src=Ext/IntData_31.js></script>
+<script src=Ext/IntData_32.js></script>
+<script src=Ext/IntData_33.js></script>
+<script src=Ext/IntData_34.js></script>
+<script src=Ext/IntData_35.js></script>
+<script src=Ext/IntData_36.js></script>
+<script src=Ext/IntData_37.js></script>
+<script src=Ext/IntData_38.js></script>
+<script src=Ext/IntData_39.js></script>
+<script src=Ext/IntData_40.js></script>
+<script src=Ext/IntData_41.js></script>
+<script src=Ext/IntData_42.js></script>
+<script src=Ext/IntData_43.js></script>
+<script src=Ext/IntData_44.js></script>
+<script src=Ext/IntData_45.js></script>
+<script src=Ext/IntData_46.js></script>
+<script src=Ext/IntData_47.js></script>
+<script src=Ext/IntData_48.js></script>
+<script src=Ext/IntData_49.js></script>
+<script src=Ext/IntData_50.js></script>
+<script src=Ext/IntData_51.js></script>
+<script src=Ext/IntData_52.js></script>
+<script src=Ext/IntData_53.js></script>
+<script src=Ext/IntData_54.js></script>
+<script src=Ext/IntData_55.js></script>
+<script src=Ext/IntData_56.js></script>
+<script src=Ext/IntData_57.js></script>
+<script src=Ext/IntData_58.js></script>
+<script src=Ext/IntData_59.js></script>
+<script src=Ext/IntData_60.js></script>
+<script src=Ext/IntData_61.js></script>
+<script src=Ext/IntData_62.js></script>
+<script src=Ext/IntData_63.js></script>
+<script src=Ext/IntData_64.js></script>
+<script src=Ext/IntData_65.js></script>
+<script src=Ext/IntData_66.js></script>
+<script src=Ext/IntData_67.js></script>
+<script src=Ext/IntData_68.js></script>
+<script src=Ext/IntData_69.js></script>
+<script src=Ext/IntData_70.js></script>
+<script src=Ext/IntData_71.js></script>
+<script src=Ext/IntData_72.js></script>
+<script src=Ext/IntData_73.js></script>
+<script src=Ext/IntData_74.js></script>
 
 <script>
 
@@ -82,20 +139,10 @@ function PrepData()
 		{
 			var Data = ReportDate[di].Data[x];
 
-			// round lat/long values to 6 digits - the higher precision digits appear to be inaccurate across different reporting days
-
-			// Data.Long = Number(Number(Data.Long).toFixed(6));
-			// Data.Lat = Number(Number(Data.Lat).toFixed(6));
-		
-			Data.ScaledCases = Math.floor(Math.sqrt(ReportDate[di].Data[x].Cases));
-
-			// make specific check to add population stats for New York City since it's not a county, but relevant to this display.
-			// this will let the chart calculations happen later in the logic even though it's county level logic.
-			if(Data.Adm.localeCompare("New York City") == 0)
-				Data.Pop= 8175133;	// Census 2010 population for New York
+			Data.Pop = Number(Data.Pop * 1000);	// UN pop data is in 1000s.
 
 			// if((Data.Pop> 0) && (Data.Cases > 0))
-			if(Data.Pop> 0)
+			if(Data.Pop > 0)
 			{
 				Data.PerCapita = Data.Cases / Data.Pop;
 				Data.DeathsPerCapita = Data.Deaths / Data.Pop;
@@ -426,26 +473,18 @@ PrepData();
 
 var DateText = document.getElementById("DataDate");
 DateText.innerHTML = "Data from " + ReportDate[0].Date + " to " + ReportDate[DateIndex].Date;
-var StateSelect = document.getElementById("StateSelect");
-var SortedData = ReportDate[DateIndex].Data.sort(function(a,b) { return a.Prov.localeCompare(b.Prov) } );
+var StateSelect = document.getElementById("CountrySelect");
+var SortedData = ReportDate[DateIndex].Data.sort(function(a,b) { return a.Region.localeCompare(b.Region) } );
 var StateElem = document.createElement("option");
 StateSelect.options.length = 0;
 StateSelect.style.display = "inline";
-StateElem.text = "Pick a state";
+StateElem.text = "Pick a country";
 StateSelect.options.add(StateElem,0);
-for(z=1,x=0;x<SortedData.length;x++)
+for(x=0;x<SortedData.length;x++)
 {
-	for(y=x+1;y<SortedData.length;y++)
-	{
-		if(SortedData[x].Prov.localeCompare(SortedData[y].Prov) != 0)
-		{
-			StateElem = document.createElement("option");
-			StateElem.text = SortedData[y].Prov;
-			StateSelect.options.add(StateElem,z++);
-			x = y-1;
-			break;
-		}
-	}
+	StateElem = document.createElement("option");
+	StateElem.text = SortedData[x].Region;
+	StateSelect.options.add(StateElem,x+1);
 }
 
 function DrawCountyData()
@@ -467,24 +506,10 @@ function DrawCountyData()
 	ctx.globalAlpha = 1.0;
 	ctx.font = "normal 18px Courier";
 	ctx.fillStyle = "blue";
-	// ctx.fillStyle = CountyColors[x];
-	if((ClickData.SqMi!= 0) && (ClickData.Adm.localeCompare(ClickData.Prov)!=0))
-	{
-		if(ClickData.Prov.localeCompare("Louisiana") == 0)
-			ctx.fillText(ClickData.Adm + " Parish",dx,dy);
-		else
-			ctx.fillText(ClickData.Adm + " County",dx,dy);
-	}
-	else
-	{
-			ctx.fillText(ClickData.Adm,dx,dy);
-	}
+	ctx.fillText(ClickData.Region,dx,dy);
+	dy += FontSize;
 
-	dy += FontSize;
 	ctx.font = "normal 12px Courier";
-	ctx.fillStyle = "gray";
-	ctx.fillText(ClickData.Prov,dx,dy);
-	dy += FontSize;
 
 	if(ClickData.Pop!= 0)
 	{
@@ -493,12 +518,16 @@ function DrawCountyData()
 		ctx.fillText("Pop:",dx,dy);
 		ctx.fillText(ClickData.Pop,dx+StatColumn,dy);
 	}
+
+	/*
 	if(ClickData.SqMi!= 0)
 	{
 		dy += FontSize;
 		ctx.fillText("Square Miles:",dx,dy);
 		ctx.fillText(ClickData.SqMi,dx+StatColumn,dy);
 	}
+	*/
+
 	dy += FontSize;
 	ctx.fillStyle = "black";
 	ctx.fillText("Total Cases:",dx,dy);
@@ -589,54 +618,19 @@ function RefreshOptionFields()
 
 StateSelect.onchange = function()
 {
-	var Found = false;
-	var CountyElem;
-
-	StateIndex = StateSelect.selectedIndex;
-	var State = StateSelect[StateIndex].text;
-
-	CountySelect.options.length = 0;
-	CountyElem = document.createElement("option");
-	CountyElem.text = "then pick a county";
-	CountySelect.options.add(CountyElem,0);
-
-	for(z=1,x=0;x<SortedData.length;x++)
-	{
-		if(SortedData[x].Prov.localeCompare(State)==0)
-		{
-			Found = true;
-			CountyElem = document.createElement("option");
-			CountyElem.text = SortedData[x].Adm;
-			CountySelect.options.add(CountyElem,z++);
-		}
-		else
-		{
-			if(Found)
-				break;
-		}
-	}
-	RefreshOptionFields();
-}
-
-var CountySelect = document.getElementById("CountySelect");
-CountySelect.style.display = "inline";
-CountySelect.onchange = function()
-{
 	var ChartDim = [500,350];
 	var ChartLoc = [340,50];
 
 	RefreshOptionFields();
 
-	CountyIndex = CountySelect.selectedIndex;
+	var StateIndex = StateSelect.selectedIndex;
 	var State = StateSelect[StateIndex].text;
-	var County = CountySelect[CountyIndex].text;
 
 	// we have to find out county data array
 	var DataArray = ReportDate[DateIndex].Data;
 	for(x=0;x<DataArray.length;x++)
 	{
-		if(	(DataArray[x].Adm.localeCompare(County) == 0) &&
-			(DataArray[x].Prov.localeCompare(State) == 0))
+		if(	DataArray[x].Region.localeCompare(State) == 0)
 		{
 			ClickData = DataArray[x];
 			break;
@@ -645,7 +639,7 @@ CountySelect.onchange = function()
 
 	if(x == ReportDate[DateIndex].length)
 	{
-		console.log(State + " " + County + " was not found");
+		console.log(State + " was not found");
 		return;
 	}
 	
@@ -656,8 +650,11 @@ CountySelect.onchange = function()
 	{
 		for(y=0;y<ReportDate[x].Data.length;y++)
 		{
+			if(ReportDate[x].Data[y].Region.localeCompare(ClickData.Region)==0)
+			/*
 			if(	(ReportDate[x].Data[y].FIPS == ClickData.FIPS)||	// some counties (particularly in CA and TX) were not reporing the same FIPS code consistently
 				((ReportDate[x].Data[y].Lat == ClickData.Lat) && (ReportDate[x].Data[y].Long == ClickData.Long)))
+			*/
 			{
 				ClickData.HistoryData[x] = ReportDate[x].Data[y];
 				break;
