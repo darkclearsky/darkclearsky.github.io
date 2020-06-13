@@ -55,6 +55,7 @@
 <script src=USAData_79.js></script>
 <script src=USAData_80.js></script>
 <script src=USAData_81.js></script>
+<script src=USAData_82.js></script>
 
 <script>
 
@@ -475,24 +476,32 @@ function DrawCountyData()
 	ctx.font = "normal 18px Courier";
 	ctx.fillStyle = "blue";
 	// ctx.fillStyle = CountyColors[x];
-	if((ClickData.SqMi!= 0) && (ClickData.Adm.localeCompare(ClickData.Prov)!=0))
+	if(ClickData.Adm.localeCompare("Entire State")==0)
 	{
-		if(ClickData.Prov.localeCompare("Louisiana") == 0)
-			ctx.fillText(ClickData.Adm + " Parish",dx,dy);
-		else
-			ctx.fillText(ClickData.Adm + " County",dx,dy);
+		ctx.fillText(ClickData.Prov,dx,dy);
 	}
 	else
 	{
-			ctx.fillText(ClickData.Adm,dx,dy);
+		if((ClickData.SqMi!= 0) && (ClickData.Adm.localeCompare(ClickData.Prov)!=0))
+		{
+			if(ClickData.Prov.localeCompare("Louisiana") == 0)
+				ctx.fillText(ClickData.Adm + " Parish",dx,dy);
+			else
+				ctx.fillText(ClickData.Adm + " County",dx,dy);
+		}
+		else
+		{
+				ctx.fillText(ClickData.Adm,dx,dy);
+		}
+
+		dy += FontSize;
+		ctx.font = "normal 12px Courier";
+		ctx.fillStyle = "gray";
+		ctx.fillText(ClickData.Prov,dx,dy);
+		dy += FontSize;
 	}
 
-	dy += FontSize;
 	ctx.font = "normal 12px Courier";
-	ctx.fillStyle = "gray";
-	ctx.fillText(ClickData.Prov,dx,dy);
-	dy += FontSize;
-
 	if(ClickData.Pop!= 0)
 	{
 		dy += FontSize;
@@ -504,7 +513,7 @@ function DrawCountyData()
 	{
 		dy += FontSize;
 		ctx.fillText("Square Miles:",dx,dy);
-		ctx.fillText(ClickData.SqMi,dx+StatColumn,dy);
+		ctx.fillText(Number(ClickData.SqMi).toFixed(2),dx+StatColumn,dy);
 	}
 	dy += FontSize;
 	ctx.fillStyle = "black";
@@ -607,7 +616,11 @@ StateSelect.onchange = function()
 	CountyElem.text = "then pick a county";
 	CountySelect.options.add(CountyElem,0);
 
-	for(z=1,x=0;x<SortedData.length;x++)
+	CountyElem = document.createElement("option");
+	CountyElem.text = "- Show Entire State -";
+	CountySelect.options.add(CountyElem,1);
+
+	for(z=2,x=0;x<SortedData.length;x++)
 	{
 		if(SortedData[x].Prov.localeCompare(State)==0)
 		{
@@ -638,6 +651,127 @@ CountySelect.onchange = function()
 	var State = StateSelect[StateIndex].text;
 	var County = CountySelect[CountyIndex].text;
 
+
+	if(CountyIndex == 1)	// selection for entire state
+	{
+		// find state level stats **_**
+		var DataArray = new Array(ReportDate.length);
+
+		for(x=0;x<ReportDate.length;x++)
+		{
+			DataArray[x] = { Cases:0, Deaths:0, Pop:0, SqMi:0, Adm:"Entire State", Prov:State };
+			for(y=0;y<ReportDate[x].Data.length;y++)
+			{
+				if(ReportDate[x].Data[y].Prov.localeCompare(State) == 0)
+				{
+					DataArray[x].Cases += ReportDate[x].Data[y].Cases;
+					DataArray[x].Deaths += ReportDate[x].Data[y].Deaths;
+					DataArray[x].Pop += ReportDate[x].Data[y].Pop;
+					DataArray[x].SqMi += ReportDate[x].Data[y].SqMi;
+				}
+			}
+		}
+
+		for(x=0;x<DataArray.length;x++)
+		{
+			if(x == 0)
+			{
+				DataArray[x].DeltaCases = 0;
+				DataArray[x].DeltaDeaths = 0;
+			}
+			else
+			{
+				DataArray[x].DeltaCases = DataArray[x].Cases - DataArray[x-1].Cases;
+				if(DataArray[x].DeltaCases < 0)
+					DataArray[x].DeltaCases = 0;
+	
+				DataArray[x].DeltaDeaths = DataArray[x].Deaths - DataArray[x-1].Deaths;
+				if(DataArray[x].DeltaDeaths < 0)
+					DataArray[x].DeltaDeaths = 0;
+			}
+		}
+
+		// 10 day running average
+		var RunningAverageDays = 10;
+		for(x=0;x<DataArray.length;x++)
+		{
+			DataArray[x].RunningAverageCases = 0;
+			DataArray[x].RunningAverageDeaths = 0;
+			if(x < RunningAverageDays)
+			{
+				for(y=0;y<=x;y++)
+				{
+					DataArray[x].RunningAverageCases += DataArray[y].DeltaCases;
+					DataArray[x].RunningAverageDeaths += DataArray[y].DeltaDeaths;
+				}
+				DataArray[x].RunningAverageCases /= (x+1);
+				DataArray[x].RunningAverageDeaths /= (x+1);
+			}
+			else
+			{
+				for(y=x-RunningAverageDays;y<=x;y++)
+				{
+					DataArray[x].RunningAverageCases += DataArray[y].DeltaCases;
+					DataArray[x].RunningAverageDeaths += DataArray[y].DeltaDeaths;
+				}
+				DataArray[x].RunningAverageCases /= (RunningAverageDays+1);
+				DataArray[x].RunningAverageDeaths /= (RunningAverageDays+1);
+			}
+
+			if(x == 0)
+			{
+				DataArray[x].TrendCases = 0;
+				DataArray[x].TrendDeaths = 0;
+			}
+			else
+			{
+				DataArray[x].TrendCases = DataArray[x].RunningAverageCases - DataArray[x-1].RunningAverageCases;
+				DataArray[x].TrendDeaths = DataArray[x].RunningAverageDeaths - DataArray[x-1].RunningAverageDeaths;
+			}
+		}
+
+		// Now go through history data and create chart series
+		var Cases = [];
+		var Deaths = [];
+		var DeltaCases = [];
+		var DeltaDeaths = [];
+
+		for(x=0;x<DataArray.length;x++)
+		{
+			Cases[x] = DataArray[x].Cases;
+			Deaths[x] = DataArray[x].Deaths;
+			DeltaCases[x] = DataArray[x].DeltaCases;
+			DeltaDeaths[x] = DataArray[x].DeltaDeaths;
+		}
+
+		ClickData = DataArray[x-1];
+		if(ClickData.Pop != 0)
+		{
+			ClickData.PerCapita = ClickData.Cases / ClickData.Pop;
+			ClickData.DeathsPerCapita = ClickData.Deaths / ClickData.Pop;
+			if(ClickData.Cases > 0)
+				ClickData.DeathRate = ClickData.Deaths / ClickData.Cases;
+			else
+				ClickData.DeathRate = 0;
+		}
+		else
+		{
+			ClickData.PerCapita = 0;
+			ClickData.DeathsPerCapita = 0;
+			ClickData.DeathRate = 0;
+		}
+
+		ClearScreen();
+		
+		DrawCountyData();
+
+		XYChart(ChartLoc,ChartDim,ReportDate.length-1,["Days since 3/22","Total Cases"],Cases,Deaths,1);
+	
+		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+
+		return;
+	}
+
 	// we have to find out county data array
 	var DataArray = ReportDate[DateIndex].Data;
 	for(x=0;x<DataArray.length;x++)
@@ -650,7 +784,7 @@ CountySelect.onchange = function()
 		}
 	}
 
-	if(x == ReportDate[DateIndex].length)
+	if(x == DataArray.length)
 	{
 		console.log(State + " " + County + " was not found");
 		return;
