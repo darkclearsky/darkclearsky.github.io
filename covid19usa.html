@@ -79,6 +79,7 @@
 <script src=USAData_90.js></script>
 <script src=USAData_91.js></script>
 <script src=USAData_92.js></script>
+<script src=USAData_93.js></script>
 
 <script>
 
@@ -370,11 +371,20 @@ function DrawCaseData()
 	// ctx.strokeStyle = "#000000";
 	// ctx.globalAlpha = 1.0;
 	ctx.lineWidth = 1;
+	var MaxCases = 0;
+	var s = 5;
+
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		if(ReportDate[DateIndex].Data[x].ScaledCases > MaxCases)
+			MaxCases = ReportDate[DateIndex].Data[x].ScaledCases;
+	}
 	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
 	{
 		var Data = ReportDate[DateIndex].Data[x];
 
-		c = Math.floor(Data.ScaledCases/32);
+		c = Math.floor(Data.ScaledCases/4);
+		// console.log("C = " + c);
 		if((Data.ScaledCases > 1) && (c == 0))
 			c = 1;
 		if(c >= SeverityColors.length)
@@ -383,6 +393,18 @@ function DrawCaseData()
 		ctx.strokeStyle = SeverityColors[c];
 		Lat = MapToCanvasY(Data.Lat);
 		Lng = MapToCanvasX(Data.Long);
+
+		var Alpha = 0.2 + (Data.ScaledCases / MaxCases);
+		if(Alpha > 1.0)
+			Alpha = 1.0;
+		ctx.globalAlpha = Alpha;
+		// ctx.globalAlpha = 1.0;
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+		/*	 old circles - were getting too large
 		ctx.beginPath();
 		ctx.arc(Lng,Lat,2+Math.floor(Data.ScaledCases/DrawScaleFactor),0,2*Math.PI);
 		ctx.globalAlpha = 0.1;
@@ -390,7 +412,9 @@ function DrawCaseData()
 		ctx.globalAlpha = 0.5;
 		ctx.stroke();
 		ctx.closePath();
+		*/
 	}
+	ctx.globalAlpha = 1.0;
 }
 
 function DrawDeathData()
@@ -399,6 +423,7 @@ function DrawDeathData()
 	ctx.strokeStyle = "#000000";
 	ctx.globalAlpha = 0.3;
 	// ctx.globalAlpha = 1.0;
+	var s = 5;
 	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
 	{
 		var Data = ReportDate[DateIndex].Data[x];
@@ -423,11 +448,19 @@ function DrawDeathData()
 			ctx.fillStyle = DeathSeverityColors[c];
 			Lat = MapToCanvasY(Data.Lat);
 			Lng = MapToCanvasX(Data.Long);
+			// ctx.globalAlpha = 1.0;
+			ctx.beginPath();
+			ctx.arc(Lng,Lat,s,0,2*Math.PI);
+			ctx.fill();
+			// ctx.stroke();
+			ctx.closePath();
+			/*
 			ctx.beginPath();
 			ctx.arc(Lng,Lat,2+Math.floor(Data.ScaledCases/DrawScaleFactor),0,2*Math.PI);
 			ctx.fill();
 			// ctx.stroke();
 			ctx.closePath();
+			*/
 		}
 	}
 }
@@ -1281,6 +1314,7 @@ var LastClickedY = 0;
 var DetailedStatsSpacing = 280;
 var CountyColors = [ "#1c1a6e","#696e1a","#1a6e28","#1b6769","#645c65","#ba4a00" ];
 var SeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff0000" ];
+// var SeverityColors = [ "#c0c0c0", "c0c080", "c0c040", "c0c000", "e0e000", "f0f000", "f0c000", "f0a000", "f08000", "f04000", "ff0000" ];
 var DeathSeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff4000", "#ff0000" ];
 var DeathRateColors = [ "#c0c0c0", "#a0a0a0", "#808080", "#404040", "#000000" ];
 var GrowthRateColors = [ "#ffffff", "#ffc0c0", "#ffa090", "#ff7050", "#ff3600", "#ff0000" ];
