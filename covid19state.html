@@ -23,7 +23,7 @@
 	</div>
 	<div class = "Row">
 		<div class = "ChartCell">
-			<canvas id="ChartArea" width=1000 height=900 style="border:0px solid #ffffff; background-color:white;">
+			<canvas id="ChartArea" width=1000 height=1000 style="border:0px solid #ffffff; background-color:white;">
 			Your browser does not support HTML5
 			</canvas>
 		</div>
@@ -69,6 +69,7 @@
 <script src=USAData_93.js></script>
 <script src=USAData_94.js></script>
 <script src=USAData_95.js></script>
+<script src=USAData_96.js></script>
 
 <script>
 
@@ -138,7 +139,37 @@ function PrepData()
 	}
 }
 
-function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries2, Option)
+function DrawDates(Left, Down, Width, Dates)
+{
+	var x,z,Inset,m,d;
+	var Names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+	var Scale = Width / Dates.length;
+
+	ctx.globalAlpha = 0.8;
+	ctx.strokeStyle = "black";
+	ctx.lineWidth = 2;
+	ctx.textAlign = "center";
+	ctx.textBaseline = "bottom";
+	ctx.font = "normal 8pt Courier";
+	Inset = Left;
+	for(x=0;x<Dates.length;x+=4)
+	{
+		z = 0;
+		m = Names[Number(Dates[x].slice(5,7))-1];
+		d = Dates[x].slice(8,10);
+		// var md = d + "|" + m;
+
+		ctx.strokeText(d,Inset,Down+z*(12));
+		for(z=0;z<m.length;z++)
+			ctx.strokeText(m[z],Inset,Down+((z+1)*12));
+		// ctx.strokeText(m + "/" + d,Inset,Down);
+		Inset += (Scale*4);
+	}
+	ctx.textAlign = "left";
+}
+
+function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, Option)
 {
 	var x,y;
 	var Max = 0;
@@ -182,8 +213,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.font = "normal 6pt Courier";
 		TextYOffset = 10;
 	}
-	ctx.strokeText(XYLabels[0],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]+SizeXY[1]+(TextYOffset*2));
-	ctx.strokeText(XYLabels[1],TopLeft[0]+(SizeXY[0]/2),TopLeft[1]);
+	ctx.strokeText(Title,TopLeft[0]+(SizeXY[0]/2),TopLeft[1]);
 
 	ctx.textAlign="right";
 	ctx.strokeText((Max/2).toFixed(0),TopLeft[0]-6,TopLeft[1]+(SizeXY[1]/2));
@@ -207,13 +237,14 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]);
 		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]);
 		ctx.stroke();
+		/*
 		if((x % 5) == 0)
 		{
 			ctx.globalAlpha = 1.0;
 			ctx.strokeStyle = "black";
 			ctx.strokeText(x,TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]+TextYOffset);
 		}
-
+		*/
 	}
 
 	// draw series1 shape and fill
@@ -438,9 +469,13 @@ var CountyIndex;
 var DisplayIndex = 0;
 var ClickData;
 var x,y,z;
+var DateStrings = [];
 
 for(x=0;x<ReportDate.length;x++)
+{
 	ReportDate[x].Prepped = false;
+	DateStrings[x] = ReportDate[x].Date;
+}
 
 ClearScreen();
 PrepData();
@@ -778,9 +813,13 @@ CountySelect.onchange = function()
 		
 		DrawCountyData();
 
-		XYChart(ChartLoc,ChartDim,ReportDate.length-1,["Days since 3/22","Total Cases"],Cases,Deaths,1);
-	
-		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+		XYChart(ChartLoc,ChartDim,ReportDate.length-1,"Total Cases",Cases,Deaths,1);
+
+		DrawDates(ChartLoc[0],ChartLoc[1]+ChartDim[1]+20,ChartDim[0],DateStrings);
+
+		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+100],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Daily Cases With 10 Day Trend",DeltaCases,DeltaDeaths,0);
+
+		DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+120,ChartDim[0],DateStrings);
 
 		return;
 	}
@@ -900,10 +939,13 @@ CountySelect.onchange = function()
 	
 	DrawCountyData();
 
-	XYChart(ChartLoc,ChartDim,ReportDate.length-1,["Days since 3/22","Total Cases"],Cases,Deaths,1);
+	XYChart(ChartLoc,ChartDim,ReportDate.length-1,"Total Cases",Cases,Deaths,1);
 
-	// XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]/3],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
-	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+	DrawDates(ChartLoc[0],ChartLoc[1]+ChartDim[1]+20,ChartDim[0],DateStrings);
+
+	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+100],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Daily Cases With 10 Day Trend",DeltaCases,DeltaDeaths,0);
+
+	DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+120,ChartDim[0],DateStrings);
 }
 
 </script>
