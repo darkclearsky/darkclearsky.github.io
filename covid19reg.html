@@ -15,9 +15,7 @@
 	<div class = "Row">
 			<div class = "Cell" id="RefreshThis">
 				<div class = "LText" id="DataDate">Loading...</div>
-				<!-- <label class = "LText">Select State</label> -->
 				<select hidden class="LText" id="CountrySelect"><option>Loading...</option></select>
-				<!-- <label class = "LText">Select county</label> -->
 				<select hidden class="LText" id="RegionSelect"></select>
 			</div>
 	</div>
@@ -130,6 +128,7 @@
 <script src=RegData_95.js></script>
 <script src=RegData_96.js></script>
 <script src=RegData_97.js></script>
+<script src=RegData_98.js></script>
 
 <script>
 
@@ -398,7 +397,7 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 	var Total = 0;
 	var Percents = [];
 	var Radians = [];
-	var LineWidth = 20;
+	var LineWidth = 40;
 	var RadiansSoFar = 0;
  
 	var Color1 = "#7878A0";
@@ -436,30 +435,39 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 	// ctx.textBaseline="middle";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "bottom";
+	RadiansSoFar = 0;
 	for(x=0;x<Amounts.length;x++)
 	{
 		// draw arc of graph
 		// ctx.fillStyle = ctx.strokeStyle = x==0?Color3:(x%2)==1?Color1:Color2;
-		ctx.strokeStyle = ctx.fillStyle = CountyColors[x];
+		ctx.strokeStyle = ctx.fillStyle = CountyColors[x%6];
 		ctx.beginPath();
 		ctx.lineWidth = LineWidth;
 		ctx.arc(CenterX,CenterY,Radius,RadiansSoFar,RadiansSoFar + Radians[x]);
 		ctx.stroke();
  
 		// draw label line and label
+		/*
 		ctx.beginPath();
 		ctx.lineWidth = 2;
 		lx = cx = CenterX + (Radius * Math.cos(RadiansSoFar+(Radians[x]/2)));
 		ly = cy = CenterY + (Radius * Math.sin(RadiansSoFar+(Radians[x]/2)));
 		ctx.moveTo(cx,cy);
-		cx = CenterX + ((Radius+10) * Math.cos(RadiansSoFar+(Radians[x]/2)));
-		cy = CenterY + ((Radius+10) * Math.sin(RadiansSoFar+(Radians[x]/2)));
+		cx = CenterX + ((Radius+50) * Math.cos(RadiansSoFar+(Radians[x]/2)));
+		cy = CenterY + ((Radius+50) * Math.sin(RadiansSoFar+(Radians[x]/2)));
 		ctx.lineTo(cx,cy);
 		ctx.stroke();
+		*/
 
+		RadiansSoFar += Radians[x];
+	}
+
+	RadiansSoFar = 0;
+	for(x=0;x<Amounts.length;x++)
+	{
 		// Draw separating line
 		ctx.beginPath();
-		ctx.strokeStyle = "darkgray";
+		ctx.strokeStyle = "white";
 		ctx.lineWidth = 5;
 		cx = CenterX+((Radius * Math.cos(RadiansSoFar+Radians[x]))*1.2);
 		cy = CenterY+((Radius * Math.sin(RadiansSoFar+Radians[x]))*1.2);
@@ -674,6 +682,7 @@ CountrySelect.onchange = function()
 {
 	var Found = false;
 	var CountyElem;
+	var x,y,z;
 
 	StateIndex = CountrySelect.selectedIndex;
 	var State = CountrySelect[StateIndex].text;
@@ -703,6 +712,38 @@ CountrySelect.onchange = function()
 		}
 	}
 	RefreshOptionFields();
+
+	// make a pie chart of the country selected
+	ClearScreen();
+	var Regions = [];
+	var Cases = [];
+	var Deaths = [];
+	var NumRegions = 0;
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		if(ReportDate[DateIndex].Data[x].Region.localeCompare(State) == 0)
+		{
+			for(y=0;y<Regions.length;y++)
+			{
+				if(Regions[y].localeCompare(ReportDate[DateIndex].Data[x].Prov) == 0)
+				{
+					Cases[y] += ReportDate[DateIndex].Data[x].Cases;
+					Deaths[y] += ReportDate[DateIndex].Data[x].Deaths;
+					break;
+				}
+			}
+			if(y == Regions.length)	// not found
+			{
+				Regions[NumRegions] = ReportDate[DateIndex].Data[x].Prov;
+				Cases[NumRegions] = ReportDate[DateIndex].Data[x].Cases;
+				Deaths[NumRegions] = ReportDate[DateIndex].Data[x].Deaths;
+				NumRegions++;
+			}
+		}
+	}
+
+	Pie(600,250,200,Cases,Regions);
+	// Pie(400,900,Pie2Loc[1],150,Deaths,Regions);
 }
 
 var RegionSelect = document.getElementById("RegionSelect");
