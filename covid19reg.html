@@ -129,6 +129,7 @@
 <script src=RegData_96.js></script>
 <script src=RegData_97.js></script>
 <script src=RegData_98.js></script>
+<script src=RegData_99.js></script>
 
 <script>
 
@@ -395,10 +396,15 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 	var cx,cy;
 	var lx,ly;
 	var Total = 0;
+	var OtherPercent;
 	var Percents = [];
 	var Radians = [];
+	var NewLabels = [];
+	var NewAmounts = [];
 	var LineWidth = 40;
 	var RadiansSoFar = 0;
+	var PercentCutoff = 0.05;
+	var Other = 0;
  
 	var Color1 = "#7878A0";
 	var Color2 = "#404080";
@@ -420,23 +426,35 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 		return;
 	}
  
-	for(x=0;x<Amounts.length;x++)
+	for(y=x=0;x<Amounts.length;x++)
 	{
-		Percents[x] = Amounts[x] / Total;
+		OtherPercent = Amounts[x] / Total;
+		if(OtherPercent < PercentCutoff)
+			Other += OtherPercent;
+		else
+		{
+			NewLabels[y] = Labels[x];
+			NewAmounts[y] = Amounts[x];
+			Percents[y++] = OtherPercent;
+		}
 	}
+
+	NewLabels[y] = "Other (<" + (PercentCutoff*100) + "%)";
+	NewAmounts[y] = 0;	// values doesn't really matter here.
+	Percents[y++] = Other;
  
-	for(x=0;x<Amounts.length;x++)
+	for(x=0;x<y;x++)
 	{
 		Radians[x] = Percents[x] * (Math.PI * 2);
 	}
  
-	// ctx.font = "normal 8pt Courier";
+	ctx.font = "normal 12pt Courier";
 	// ctx.setBaseline = "top";
 	// ctx.textBaseline="middle";
 	ctx.textAlign = "center";
 	ctx.textBaseline = "bottom";
 	RadiansSoFar = 0;
-	for(x=0;x<Amounts.length;x++)
+	for(x=0;x<NewAmounts.length;x++)
 	{
 		// draw arc of graph
 		// ctx.fillStyle = ctx.strokeStyle = x==0?Color3:(x%2)==1?Color1:Color2;
@@ -463,7 +481,7 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 	}
 
 	RadiansSoFar = 0;
-	for(x=0;x<Amounts.length;x++)
+	for(x=0;x<NewAmounts.length;x++)
 	{
 		// Draw separating line
 		ctx.beginPath();
@@ -487,16 +505,16 @@ function Pie(CenterX, CenterY, Radius, Amounts, Labels)
 	{
 		cx = CenterX + ((Radius+10) * Math.cos(RadiansSoFar+(Radians[x]/2)));
 		cy = CenterY + ((Radius+10) * Math.sin(RadiansSoFar+(Radians[x]/2)));
-		ctx.strokeText(Labels[x],cx,cy);
-		ctx.fillText(Labels[x],cx,cy);
+		ctx.strokeText(NewLabels[x],cx,cy);
+		ctx.fillText(NewLabels[x],cx,cy);
 		RadiansSoFar += Radians[x];
 	}
 
 	// draw total amount in center
 	ctx.fillStyle = "black";
 	ctx.strokeStyle = "white";
-	ctx.strokeText(Total,CenterX,CenterY);
-	ctx.fillText(Total,CenterX,CenterY);
+	ctx.strokeText("Total:" + Total,CenterX,CenterY);
+	ctx.fillText("Total:" + Total,CenterX,CenterY);
 
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
