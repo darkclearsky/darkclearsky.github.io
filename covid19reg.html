@@ -137,6 +137,7 @@
 <script src=RegData_104.js></script>
 <script src=RegData_105.js></script>
 <script src=RegData_106.js></script>
+<script src=RegData_107.js></script>
 
 <script>
 
@@ -176,7 +177,7 @@ function DrawDates(Left, Down, Width, Dates)
 	for(x=0;x<Dates.length;x+=2)
 	{
 		z = 0;
-		m = Names[Number(Dates[x].slice(5,7))];
+		m = Names[Number(Dates[x].slice(5,7))-1];
 		d = Dates[x].slice(8,10);
 		// var md = d + "|" + m;
 
