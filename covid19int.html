@@ -157,6 +157,7 @@
 <script src=IntData_124.js></script>
 <script src=IntData_125.js></script>
 <script src=IntData_126.js></script>
+<script src=IntData_127.js></script>
 
 <script>
 
@@ -285,7 +286,7 @@ function XYChart(TopLeft, SizeXY, XEmphasis, XYLabels, ValueSeries1, ValueSeries
 		ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]);
 		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+SizeXY[1]);
 		ctx.stroke();
-		if((x % 5) == 0)
+		if((x % 10) == 0)
 		{
 			ctx.globalAlpha = 1.0;
 			ctx.strokeStyle = "black";
