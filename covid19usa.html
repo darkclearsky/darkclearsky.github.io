@@ -131,6 +131,7 @@
 <script src=USAData_132.js></script>
 <script src=USAData_133.js></script>
 <script src=USAData_134.js></script>
+<script src=USAData_135.js></script>
 
 <script>
 
@@ -790,13 +791,14 @@ function DaysSinceLastPeak(ReportCases)
 function NationalRanking(ReportCases)
 {
 	var Lat,Lng,x,c,Cases;
-	ctx.strokeStyle = "#000000";
 	ctx.globalAlpha = 1;
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	ctx.font = "normal 12pt Courier";
 
-	var s = 7;
+	var s = 10;
 	var Rank;
 
-	ctx.fillStyle = "red";
 	for(x=0;x<DailyCases.length;x++)
 	{
 		if(ReportCases)
@@ -804,23 +806,26 @@ function NationalRanking(ReportCases)
 		else
 			Rank = DailyCases[x].DeathRank[DateIndex];   // deaths
 
-		/*
-		c = DecToHex(Rank / 15);
-		ctx.fillStyle = "#ff" + c + c;
-		*/
-
 		if(Rank > 20)
 			continue;
 
 		// ctx.fillStyle = "#" + c + c + c;
 		Lat = MapToCanvasY(DailyCases[x].Lat);
 		Lng = MapToCanvasX(DailyCases[x].Long);
-		// ctx.globalAlpha = 1.0;
+		ctx.strokeStyle = "black";
+		ctx.fillStyle = "red";
 		ctx.beginPath();
+		ctx.lineWidth = 2;
 		ctx.arc(Lng,Lat,s,0,2*Math.PI);
 		ctx.fill();
-		// ctx.stroke();
-		ctx.closePath();
+		ctx.stroke();
+		ctx.lineWidth = 3;
+		ctx.fillStyle = "white";
+		ctx.strokeStyle = "black";
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.strokeText((Rank).toString(),Lng,Lat-8);
+		ctx.fillText((Rank).toString(),Lng,Lat-8);
+		// ctx.closePath();
 	}
 }
 
