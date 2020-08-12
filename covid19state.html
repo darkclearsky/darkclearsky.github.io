@@ -115,6 +115,7 @@
 <script src=USAData_139.js></script>
 <script src=USAData_140.js></script>
 <script src=USAData_141.js></script>
+<script src=USAData_142.js></script>
 
 <script>
 
@@ -554,7 +555,13 @@ PrepData();
 var DateText = document.getElementById("DataDate");
 DateText.innerHTML = "Data from " + ReportDate[0].Date + " to " + ReportDate[DateIndex].Date;
 var StateSelect = document.getElementById("StateSelect");
-var SortedData = ReportDate[DateIndex].Data.sort(function(a,b) { return a.Prov.localeCompare(b.Prov) } );
+var SortedData = ReportDate[DateIndex].Data.sort(
+function(a,b) 
+	{ 
+		o = a.Prov.localeCompare(b.Prov);
+		return(o==0?a.Adm.localeCompare(b.Adm):o);
+	} 
+);
 var StateElem = document.createElement("option");
 StateSelect.options.length = 0;
 StateSelect.style.display = "inline";

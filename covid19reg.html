@@ -172,6 +172,7 @@
 <script src=RegData_139.js></script>
 <script src=RegData_140.js></script>
 <script src=RegData_141.js></script>
+<script src=RegData_142.js></script>
 
 <script>
 
@@ -581,7 +582,14 @@ ClearScreen();
 var DateText = document.getElementById("DataDate");
 DateText.innerHTML = "Data from " + ReportDate[0].Date + " to " + ReportDate[DateIndex].Date;
 var CountrySelect = document.getElementById("CountrySelect");
-var SortedData = ReportDate[DateIndex].Data.sort(function(a,b) { return a.Region.localeCompare(b.Region) } );
+var SortedData = ReportDate[DateIndex].Data.sort(
+function(a,b) 
+	{ 
+		o = a.Region.localeCompare(b.Region);
+		return(o==0?a.Prov.localeCompare(b.Prov):o);
+	} 
+);
+
 var StateElem = document.createElement("option");
 CountrySelect.options.length = 0;
 CountrySelect.style.display = "inline";
