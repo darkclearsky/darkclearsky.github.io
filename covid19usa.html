@@ -6,7 +6,7 @@
 	.RText { font-family: Courier; font-size:12px; font-weight:bold; vertical-align: top; text-align: right; background-color: white; }
 	.CText { font-family: Courier; font-size:12px; font-weight:bold; vertical-align: top; text-align: center; color: black; background-color: white; }
 	.CCText { font-family: Courier; font-size:12px; font-weight:bold; vertical-align: top; text-align: center; color: blue; background-color: white; }
-	.ButtonC { font-family: Courier; font-size:14px; font-weight:bold; height:20px; width:35px; vertical-align: middle; text-align: center; color: blue; background-color: white; }
+	.ButtonC { font-family: Courier; padding-left:0px; padding-right:0px; font-size:10px; font-weight:bold; height:20px; width:40px; vertical-align: middle; text-align: center; color: blue; background-color: white; }
     .Table { display:table }
     .Row { display: table-row; background-color: white; height: 40px; }
     .Cell { display: table-cell; vertical-align: top; text-align: left; border: 0px solid black; padding-left: 5px; padding-right: 5px; }
@@ -31,10 +31,12 @@
 	</div>
 	<div class = "Row" id="Controls" style="visibility:collapse;">
 			<div class = "Cell">
-				<button type="button" class=ButtonC id="ReverseButton">&#10074&#x25c0</button>
+				<button type="button" class=ButtonC id="ReverseButton">&#10074&#x25c0&#x25c0</button>
+				<button type="button" class=ButtonC id="Backward1FrameButton">&#10074&#x25c0</button>
 				<button type="button" class=ButtonC id="PauseButton">&#10074&#10074</button>
 				<button type="button" class=ButtonC id="PlayButton">&#x25b6</button>
-				<button type="button" class=ButtonC id="FastForwardButton">&#x25b6&#10074</button>
+				<button type="button" class=ButtonC id="Forward1FrameButton">&#x25b6&#10074</button>
+				<button type="button" class=ButtonC id="FastForwardButton">&#x25b6&#x25b6&#10074</button>
 
 				<label class = "LText">Date Select:</label>
 				<input type="range" class=Slider min=0 max=1 value=1 id="DateCtrl">
@@ -139,6 +141,7 @@
 <script src=USAData_140.js></script>
 <script src=USAData_141.js></script>
 <script src=USAData_142.js></script>
+<script src=USAData_143.js></script>
 
 <script>
 
@@ -760,10 +763,14 @@ function CalcAverages2()
 	PauseButton.disabled = true;
 	ReverseButton.disabled = false;
 	FastForwardButton.disabled = false;
+	Forward1FrameButton.disabled = false;
+	Backward1FrameButton.disabled = false;
 	PlayButton.style.visibility= "visible";
 	PauseButton.style.visibility = "hidden";
 	ReverseButton.style.visibility = "visible";
 	FastForwardButton.style.visibility = "visible";
+	Forward1FrameButton.style.visibility = "visible";
+	Backward1FrameButton.style.visibility = "visible";
 }
 
 function DaysSinceLastPeak(ReportCases)
@@ -1788,6 +1795,8 @@ var PlayButton = document.getElementById("PlayButton");
 var PauseButton = document.getElementById("PauseButton");
 var ReverseButton = document.getElementById("ReverseButton");
 var FastForwardButton = document.getElementById("FastForwardButton");
+var Backward1FrameButton = document.getElementById("Backward1FrameButton");
+var Forward1FrameButton = document.getElementById("Forward1FrameButton");
 
 PlayButton.onclick = function()
 {
@@ -1798,11 +1807,15 @@ PlayButton.onclick = function()
 		PauseButton.disabled = false;
 		ReverseButton.disabled = true;
 		FastForwardButton.disabled = true;
+		Forward1FrameButton.disabled = true;
+		Backward1FrameButton.disabled = true;
 
 		PlayButton.style.visibility= "hidden";
 		PauseButton.style.visibility = "visible";
 		ReverseButton.style.visibility = "hidden";
 		FastForwardButton.style.visibility = "hidden";
+		Forward1FrameButton.style.visibility = "hidden";
+		Backward1FrameButton.style.visibility = "hidden";
 
 		PlayTimer = setInterval(function() { Index = DateIndex+1; if(Index >= ReportDate.length) Index = 0; UpdateDay(Index); },250);
 		Playing = true;
@@ -1817,11 +1830,15 @@ PauseButton.onclick = function()
 		PauseButton.disabled = true;
 		ReverseButton.disabled = false;
 		FastForwardButton.disabled = false;
+		Forward1FrameButton.disabled = false;
+		Backward1FrameButton.disabled = false;
 
 		PlayButton.style.visibility= "visible";
 		PauseButton.style.visibility = "hidden";
 		ReverseButton.style.visibility = "visible";
 		FastForwardButton.style.visibility = "visible";
+		Forward1FrameButton.style.visibility = "visible";
+		Backward1FrameButton.style.visibility = "visible";
 
 		clearInterval(PlayTimer);
 		Playing = false;
@@ -1838,6 +1855,18 @@ FastForwardButton.onclick = function()
 {
 	if(!Playing)
 		UpdateDay(ReportDate.length-1);
+}
+
+Forward1FrameButton.onclick = function()
+{
+	if(DateIndex != ReportDate.length-1)
+		UpdateDay(DateIndex+1);
+}
+
+Backward1FrameButton.onclick = function()
+{
+	if(DateIndex != 0)
+		UpdateDay(DateIndex-1);
 }
 
 // canvas.addEventListener("mousedown",MouseDown,false);
