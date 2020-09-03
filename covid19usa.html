@@ -162,6 +162,7 @@
 <script src=USAData_161.js></script>
 <script src=USAData_162.js></script>
 <script src=USAData_163.js></script>
+<script src=USAData_164.js></script>
 
 <script>
 
@@ -539,6 +540,118 @@ function DrawDeathData()
 	}
 }
 
+function DrawCaseGrowth()
+{
+	var Lat,Lng,d,x,c;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.5;
+	// ctx.globalAlpha = 1.0;
+	var s = 5;
+	var dce;
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		var Data = ReportDate[DateIndex].Data[x];
+
+		dce = Data.DailyCasesEntry;
+		if(typeof dce == "undefined")
+			continue;
+
+		if(dce.MovingAveragePercentCaseGrowth[DateIndex] < -2)
+			c = GrowthPercentColors[0];
+		else
+			if(dce.MovingAveragePercentCaseGrowth[DateIndex] < -1)
+				c = GrowthPercentColors[1];
+			else
+				if(dce.MovingAveragePercentCaseGrowth[DateIndex] < -0.5)
+					c = GrowthPercentColors[2];
+				else
+					if(dce.MovingAveragePercentCaseGrowth[DateIndex] < -0.1)
+						c = GrowthPercentColors[3];
+					else
+						if(dce.MovingAveragePercentCaseGrowth[DateIndex] < 0.0)
+							c = GrowthPercentColors[4];
+						else
+							if(dce.MovingAveragePercentCaseGrowth[DateIndex] < 0.1)
+								c = GrowthPercentColors[5];
+							else
+								if(dce.MovingAveragePercentCaseGrowth[DateIndex] < 0.5)
+									c = GrowthPercentColors[6];
+								else
+									if(dce.MovingAveragePercentCaseGrowth[DateIndex] < 1)
+										c = GrowthPercentColors[7];
+									else
+										if(dce.MovingAveragePercentCaseGrowth[DateIndex] < 2)
+											c = GrowthPercentColors[8];
+										else
+											c = GrowthPercentColors[9];
+
+
+		ctx.fillStyle = c;
+		Lat = MapToCanvasY(Data.Lat);
+		Lng = MapToCanvasX(Data.Long);
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		ctx.closePath();
+	}
+}
+
+function DrawDeathGrowth()
+{
+	var Lat,Lng,d,x,c;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.5;
+	// ctx.globalAlpha = 1.0;
+	var s = 5;
+	var dce;
+	for(x=0;x<ReportDate[DateIndex].Data.length;x++)
+	{
+		var Data = ReportDate[DateIndex].Data[x];
+
+		dce = Data.DailyCasesEntry;
+		if(typeof dce == "undefined")
+			continue;
+
+		if(dce.MovingAveragePercentDeathGrowth[DateIndex] < -2)
+			c = GrowthPercentColors[0];
+		else
+			if(dce.MovingAveragePercentDeathGrowth[DateIndex] < -1)
+				c = GrowthPercentColors[1];
+			else
+				if(dce.MovingAveragePercentDeathGrowth[DateIndex] < -0.5)
+					c = GrowthPercentColors[2];
+				else
+					if(dce.MovingAveragePercentDeathGrowth[DateIndex] < -0.1)
+						c = GrowthPercentColors[3];
+					else
+						if(dce.MovingAveragePercentDeathGrowth[DateIndex] < 0.0)
+							c = GrowthPercentColors[4];
+						else
+							if(dce.MovingAveragePercentDeathGrowth[DateIndex] < 0.1)
+								c = GrowthPercentColors[5];
+							else
+								if(dce.MovingAveragePercentDeathGrowth[DateIndex] < 0.5)
+									c = GrowthPercentColors[6];
+								else
+									if(dce.MovingAveragePercentDeathGrowth[DateIndex] < 1)
+										c = GrowthPercentColors[7];
+									else
+										if(dce.MovingAveragePercentDeathGrowth[DateIndex] < 2)
+											c = GrowthPercentColors[8];
+										else
+											c = GrowthPercentColors[9];
+
+
+		ctx.fillStyle = c;
+		Lat = MapToCanvasY(Data.Lat);
+		Lng = MapToCanvasX(Data.Long);
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		ctx.closePath();
+	}
+}
+
 function CalcAverages2()
 {
 	var a,x,y,z;
@@ -739,15 +852,51 @@ function CalcAverages2()
 				DailyCases[x].MovingAverageCases[y] = Math.ceil(MovingAverageTotalCases / ActualMovingAveragePeriod);
 				DailyCases[x].MovingAverageDeaths[y] = Math.ceil(MovingAverageTotalDeaths / ActualMovingAveragePeriod);
 
+				var NumeratorCases,NumeratorDeaths,DenominatorCases,DenominatorDeaths;
 				if(ActualMovingAveragePeriod < MovingAveragePeriod)
 				{
-					DailyCases[x].MovingAveragePercentCaseGrowth[y] = (DailyCases[x].MovingAverageCases[y] - DailyCases[x].Cases[0]) / DailyCases[x].Cases[0];
-					DailyCases[x].MovingAveragePercentDeathGrowth[y] = (DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].Deaths[0]) / DailyCases[x].Deaths[0];
+					if(DailyCases[x].MovingAverageCases[y] - DailyCases[x].Cases[0] == 0)
+						DailyCases[x].MovingAveragePercentCaseGrowth[y] = 0;
+					else
+					{
+						NumeratorCases = (DailyCases[x].MovingAverageCases[y] - DailyCases[x].Cases[0]);
+						DenominatorCases = DailyCases[x].Cases[0] == 0 ? 1 : DailyCases[x].Cases[0];
+						DailyCases[x].MovingAveragePercentCaseGrowth[y] = NumeratorCases / DenominatorCases;
+					}
+
+					if(DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].Deaths[0] == 0)
+						DailyCases[x].MovingAveragePercentDeathGrowth[y] = 0;
+					else
+					{
+						NumeratorDeaths = (DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].Deaths[0]);
+						DenominatorDeaths = DailyCases[x].Deaths[0] == 0 ? 1 : DailyCases[x].Deaths[0];
+						DailyCases[x].MovingAveragePercentDeathGrowth[y] = NumeratorDeaths / DenominatorDeaths;
+					}
+
+					// DailyCases[x].MovingAveragePercentCaseGrowth[y] = (DailyCases[x].MovingAverageCases[y] - DailyCases[x].Cases[0]) / (DailyCases[x].Cases[0] == 0?1:DailyCases[x].Cases[0]);
+					// DailyCases[x].MovingAveragePercentDeathGrowth[y] = (DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].Deaths[0]) / (DailyCases[x].Deaths[0] == 0?1:DailyCases[x].Deaths[0]);
 				}
 				else
 				{
-					DailyCases[x].MovingAveragePercentCaseGrowth[y] = (DailyCases[x].MovingAverageCases[y] - DailyCases[x].MovingAverageCases[y-MovingAveragePeriod]) / DailyCases[x].MovingAverageCases[y];
-					DailyCases[x].MovingAveragePercentDeathGrowth[y] = (DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod]) / DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod];
+					if(DailyCases[x].MovingAverageCases[y] - DailyCases[x].MovingAverageCases[y-MovingAveragePeriod] == 0)
+						DailyCases[x].MovingAveragePercentCaseGrowth[y] = 0;
+					else
+					{
+						NumeratorCases = (DailyCases[x].MovingAverageCases[y] - DailyCases[x].MovingAverageCases[y-MovingAveragePeriod]);
+						DenominatorCases = DailyCases[x].MovingAverageCases[y-MovingAveragePeriod] == 0 ? 1 : DailyCases[x].MovingAverageCases[y-MovingAveragePeriod];
+						DailyCases[x].MovingAveragePercentCaseGrowth[y] = NumeratorCases / DenominatorCases;
+					}
+
+					if(DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod] == 0)
+						DailyCases[x].MovingAveragePercentDeathGrowth[y] = 0;
+					else
+					{
+						NumeratorDeaths = (DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod]);
+						DenominatorDeaths = DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod] == 0 ? 1 : DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod];
+						DailyCases[x].MovingAveragePercentDeathGrowth[y] = NumeratorDeaths / DenominatorDeaths;
+					}
+					// DailyCases[x].MovingAveragePercentCaseGrowth[y] = (DailyCases[x].MovingAverageCases[y] - DailyCases[x].MovingAverageCases[y-MovingAveragePeriod]) / DailyCases[x].MovingAverageCases[y];
+					// DailyCases[x].MovingAveragePercentDeathGrowth[y] = (DailyCases[x].MovingAverageDeaths[y] - DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod]) / DailyCases[x].MovingAverageDeaths[y-MovingAveragePeriod];
 				}
 			}
 		}
@@ -1099,8 +1248,11 @@ function DrawData()
 		case	9:	// total Deaths per county
 					DrawDeathData();
 					break;
-		case	10:	// Growing / Receding trend
-					DrawGrowth();
+		case	10:	// Growing / Receding trend - cases
+					DrawCaseGrowth();
+					break;
+		case	11:	// Growing / Receding trend - deaths
+					DrawDeathGrowth();
 					break;
 	}
 }
@@ -1752,7 +1904,8 @@ var SeverityColors = [ "#c0c0c0", "#ff6a1f", "#ba4000", "#ff0000" ];
 var DeathSeverityColors = [ "#808080", "#c0c0c0", "#ba4000", "#ff4000", "#ff0000" ];
 var DeathRateColors = [ "#c0c0c0", "#a0a0a0", "#808080", "#404040", "#000000" ];
 var GrowthRateColors = [ "#ffffff", "#ffc0c0", "#ffa090", "#ff7050", "#ff3600", "#ff0000" ];
-var GrowthPercentColors = [ "#186a3b", "#239b56", "#2ecc71", "#82e0aa", "#eafaf1", "#fbeee6", "#edbb99", "#dc7633", "#a04000", "#6e2c00" ];
+// var GrowthPercentColors = [ "#186a3b", "#239b56", "#2ecc71", "#82e0aa", "#eafaf1", "#fbeee6", "#edbb99", "#dc7633", "#a04000", "#6e2c00" ];
+var GrowthPercentColors = [ "#00ff00", "#40ff40", "#80ff80", "#a0ffa0", "#c0ffc0", "#ffc0c0", "#ffa0a0", "#ff8080", "#ff4040", "#ff0000" ];
 var canvas = document.getElementById("USAMap");
 var ctx = canvas.getContext("2d");
 var DrawScaleFactor = 2;
@@ -1760,15 +1913,16 @@ var DateIndex = ReportDate.length-1;	// Start with latest date in set
 var DisplayOptions = [ 		
 							"10 Day Daily Case Average",			// 0
 							"10 Day Fatality Average",				// 1
-							"Days since peak cases reported",		// 2
-							"Days since peak fatalities reported",	// 3
+							"Days Since Peak Cases Reported",		// 2
+							"Days Since Peak Fatalities Reported",	// 3
 							"20 Worst 10 Day Average Caseload",		// 4
 							"20 Worst 10 Day Average Fatalities",	// 5
 							"Raw Daily Cases Reported",				// 6
 							"Raw Fatality Cases Reported",			// 7
 							"Total Cases", 							// 8
-							"Total Deaths" 							// 9 
-							// "Growing or Receding Trends"			// 10
+							"Total Deaths",							// 9 
+							"10 Day Average Case Growth Trends",	// 10
+							"10 Day Average Fatality Growth Trends"	// 11
 					];
 var DisplayIndex = 0;
 var MaxSummary = 4;
