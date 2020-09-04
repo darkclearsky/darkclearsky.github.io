@@ -138,6 +138,7 @@
 <script src=USAData_162.js></script>
 <script src=USAData_163.js></script>
 <script src=USAData_164.js></script>
+<script src=USAData_165.js></script>
 
 <script>
 
@@ -221,7 +222,7 @@ function DrawDates(Left, Down, Width, Dates)
 	ctx.textBaseline = "bottom";
 	ctx.font = "normal 8pt Courier";
 	Inset = Left + Scale;
-	for(x=0;x<Dates.length;x+=4)
+	for(x=0;x<Dates.length;x+=10)
 	{
 		z = 0;
 		m = Names[Number(Dates[x].slice(5,7))-1];
@@ -232,7 +233,7 @@ function DrawDates(Left, Down, Width, Dates)
 		for(z=0;z<m.length;z++)
 			ctx.fillText(m[z],Inset,Down+((z+1)*12));
 		// ctx.strokeText(m + "/" + d,Inset,Down);
-		Inset += (Scale*4);
+		Inset += (Scale*10);
 	}
 	ctx.textAlign = "left";
 }
