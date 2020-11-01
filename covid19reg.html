@@ -252,6 +252,7 @@
 <script src=RegData_219.js></script>
 <script src=RegData_220.js></script>
 <script src=RegData_221.js></script>
+<script src=RegData_222.js></script>
 
 <script>
 
@@ -288,7 +289,7 @@ function DrawDates(Left, Down, Width, Dates)
 	ctx.textBaseline = "bottom";
 	ctx.font = "normal 8pt Courier";
 	Inset = Left+Scale;
-	for(x=0;x<Dates.length;x+=5)
+	for(x=0;x<Dates.length;x+=10)
 	{
 		z = 0;
 		m = Names[Number(Dates[x].slice(5,7))-1];
@@ -299,7 +300,7 @@ function DrawDates(Left, Down, Width, Dates)
 		for(z=0;z<m.length;z++)
 			ctx.fillText(m[z],Inset,Down+((z+1)*12));
 		// ctx.strokeText(m + "/" + d,Inset,Down);
-		Inset += (Scale*5);
+		Inset += (Scale*10);
 	}
 	ctx.textAlign = "left";
 }
