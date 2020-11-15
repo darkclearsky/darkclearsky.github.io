@@ -23,7 +23,7 @@
 	</div>
 	<div class = "Row">
 		<div class = "ChartCell">
-			<canvas id="ChartArea" width=1000 height=1000 style="border:0px solid #ffffff; background-color:white;">
+			<canvas id="ChartArea" width=1300 height=1000 style="border:0px solid #ffffff; background-color:white;">
 			Your browser does not support HTML5
 			</canvas>
 		</div>
@@ -209,6 +209,7 @@
 <script src=USAData_233.js></script>
 <script src=USAData_234.js></script>
 <script src=USAData_235.js></script>
+<script src=USAData_236.js></script>
 
 <script>
 
@@ -892,7 +893,7 @@ var CountySelect = document.getElementById("CountySelect");
 CountySelect.style.display = "inline";
 CountySelect.onchange = function()
 {
-	var ChartDim = [500,350];
+	var ChartDim = [800,350];
 	var ChartLoc = [340,50];
 
 	RefreshOptionFields();
