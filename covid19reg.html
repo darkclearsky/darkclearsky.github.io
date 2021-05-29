@@ -21,7 +21,7 @@
 	</div>
 	<div class = "Row">
 		<div class = "ChartCell">
-			<canvas id="ChartArea" width=1300 height=1000 style="border:0px solid #ffffff; background-color:white;">
+			<canvas id="ChartArea" width=1300 height=1600 style="border:0px solid #ffffff; background-color:white;">
 			Your browser does not support HTML5
 			</canvas>
 		</div>
@@ -29,6 +29,9 @@
 </div>
 
 </body>
+
+<script src=VaxSource.js></script>
+<script src=VaxDataCountry.js></script>
 
 <script src=RegData_0.js></script>
 <script src=RegData_1.js></script>
@@ -449,6 +452,18 @@
 <script src=RegData_416.js></script>
 <script src=RegData_417.js></script>
 <script src=RegData_418.js></script>
+<script src=RegData_419.js></script>
+<script src=RegData_420.js></script>
+<script src=RegData_421.js></script>
+<script src=RegData_422.js></script>
+<script src=RegData_423.js></script>
+<script src=RegData_424.js></script>
+<script src=RegData_425.js></script>
+<script src=RegData_426.js></script>
+<script src=RegData_427.js></script>
+<script src=RegData_428.js></script>
+<script src=RegData_429.js></script>
+<script src=RegData_430.js></script>
 
 <script>
 
@@ -469,6 +484,19 @@ function ClearScreen()
 	ctx.globalAlpha = 1.0;
 	ctx.fillStyle = "white";
 	ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function GetVaccine(Country)
+{
+	var x;
+	for(x=0;x<VaxByCountry.length;x++)
+		if(VaxByCountry[x].Location.localeCompare(Country) == 0)
+			break;
+
+	if(x == VaxByCountry.length)
+		return("");
+	else
+		return(VaxByCountry[x].Data[0].Vaccines)
 }
 
 function DrawDates(Left, Down, Width, Dates)
@@ -529,17 +557,22 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	}
 	*/
 
-	for(x=0;x<ValueSeries1.length;x++)
+	if(Option == 3)
+		Max = 100;
+	else
 	{
-		if(Max < ValueSeries1[x])
-			Max = ValueSeries1[x];
-		if(Max < ValueSeries2[x])
-			Max = ValueSeries2[x];
-
-		if(Min > ValueSeries1[x])
-			Min = ValueSeries1[x];
-		if(Min > ValueSeries2[x])
-			Min = ValueSeries2[x];
+		for(x=0;x<ValueSeries1.length;x++)
+		{
+			if(Max < ValueSeries1[x])
+				Max = ValueSeries1[x];
+			if(Max < ValueSeries2[x])
+				Max = ValueSeries2[x];
+	
+			if(Min > ValueSeries1[x])
+				Min = ValueSeries1[x];
+			if(Min > ValueSeries2[x])
+				Min = ValueSeries2[x];
+		}
 	}
 
 	// YScale = SizeXY[1] / (Max-Min);
@@ -705,6 +738,18 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	ctx.closePath();
 	ctx.fill();
 
+	// draw calibration lines
+	ctx.strokeStyle = "white";
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]/4));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+(SizeXY[1]/4));
+	ctx.stroke();
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]/2));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+(SizeXY[1]/2));
+	ctx.stroke();
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1] * 0.75));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+(SizeXY[1] * 0.75));
+	ctx.stroke();
+
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
 }
@@ -851,6 +896,7 @@ var StateIndex;
 var CountyIndex;
 var DisplayIndex = 0;
 var ClickData;
+var VaccineClickData;
 var x,y,z;
 
 ClearScreen();
@@ -902,6 +948,8 @@ function DrawCountyData()
 	dx = 20;
 	dy = 30;
 
+	// Vax = GetVaccine(ClickData.Prov);
+
 	ctx.globalAlpha = 1.0;
 	ctx.font = "normal 18px Courier";
 	ctx.fillStyle = "blue";
@@ -915,6 +963,14 @@ function DrawCountyData()
 		ctx.fillText(ClickData.Region,dx,dy);
 		dy += FontSize;
 	}
+	/*
+	if(Vax.length != 0)
+	{
+		ctx.fillStyle = "green";
+		ctx.fillText(Vax,dx,dy);
+		dy += FontSize;
+	}
+	*/
 
 	ctx.font = "normal 12px Courier";
 	/*
@@ -1104,7 +1160,6 @@ RegionSelect.onchange = function()
 	var State = CountrySelect[StateIndex].text;
 	var County = RegionSelect[CountyIndex].text;
 
-
 	if(CountyIndex == 1)	// selection for entire state
 	{
 		// find state level stats 
@@ -1200,11 +1255,26 @@ RegionSelect.onchange = function()
 			}
 		}
 
+		// locate vaccine data, if any
+		for(x=0;x<VaxStatsByCountry.length;x++)
+		{
+			if(VaxStatsByCountry[x].Location.localeCompare(State) == 0)
+			{
+				VaccineClickData = VaxStatsByCountry[x];
+				break;
+			}
+		}
+		if(x == VaxStatsByCountry.length)
+			VaccineClickData = "none";
+
 		// Now go through history data and create chart series
 		var Cases = [];
 		var Deaths = [];
 		var DeltaCases = [];
 		var DeltaDeaths = [];
+		var TotalVaccinations = [];
+		var PeopleVaccinatedPercentage = [];
+		var DailyVaccinations = [];
 
 		for(x=0;x<DataArray.length;x++)
 		{
@@ -1231,6 +1301,30 @@ RegionSelect.onchange = function()
 			ClickData.DeathRate = 0;
 		}
 
+		if((typeof VaccineClickData).localeCompare("object") == 0)
+		{
+			for(x=0;x<ReportDate.length;x++)
+			{
+				TotalVaccinations[x] = 0;
+				PeopleVaccinatedPercentage[x] = 0;
+				DailyVaccinations[x] = 0;
+				for(y=0;y<VaccineClickData.Data.length;y++)
+				{
+					if(VaccineClickData.Data[y].Date.localeCompare(ReportDate[x].Date) == 0)
+					{
+						TotalVaccinations[x] = VaccineClickData.Data[y].TotalVaccinations;
+						if(VaccineClickData.Data[y].PeopleVaccinated != 0)
+							PeopleVaccinatedPercentage[x] = (VaccineClickData.Data[y].PeopleVaccinated / (VaccineClickData.Data[y].Pop * 1000) * 100);
+						else
+							if(x != 0)
+								PeopleVaccinatedPercentage[x] = PeopleVaccinatedPercentage[x-1];
+						DailyVaccinations[x] = VaccineClickData.Data[y].DailyVaccinations;
+						break;
+					}
+				}
+			}
+		}
+
 		ClearScreen();
 		
 		DrawCountyData();
@@ -1242,6 +1336,13 @@ RegionSelect.onchange = function()
 		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+100],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Daily Cases With 10 Day Trend",DeltaCases,DeltaDeaths,0);
 
 		DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+120,ChartDim[0],DateText);
+		
+		if((typeof VaccineClickData).localeCompare("object") == 0)
+		{
+			Vax = GetVaccine(ClickData.Prov);
+			XYChart([ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+180],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Percentage vaccinated " + Vax,PeopleVaccinatedPercentage,[],3);
+			DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*3)+210,ChartDim[0],DateText);
+		}
 
 		return;
 	}

@@ -23,7 +23,7 @@
 	</div>
 	<div class = "Row">
 		<div class = "ChartCell">
-			<canvas id="ChartArea" width=1300 height=1000 style="border:0px solid #ffffff; background-color:white;">
+			<canvas id="ChartArea" width=1300 height=1600 style="border:0px solid #ffffff; background-color:white;">
 			Your browser does not support HTML5
 			</canvas>
 		</div>
@@ -31,6 +31,8 @@
 </div>
 
 </body>
+
+<script src=VaxDataState.js></script>
 
 <script src=USAData.js></script>
 <script src=USAData_60.js></script>
@@ -392,6 +394,18 @@
 <script src=USAData_416.js></script>
 <script src=USAData_417.js></script>
 <script src=USAData_418.js></script>
+<script src=USAData_419.js></script>
+<script src=USAData_420.js></script>
+<script src=USAData_421.js></script>
+<script src=USAData_422.js></script>
+<script src=USAData_423.js></script>
+<script src=USAData_424.js></script>
+<script src=USAData_425.js></script>
+<script src=USAData_426.js></script>
+<script src=USAData_427.js></script>
+<script src=USAData_428.js></script>
+<script src=USAData_429.js></script>
+<script src=USAData_430.js></script>
 
 <script>
 
@@ -501,12 +515,17 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	var RunningAverage = [];
 	var RunningAveragePeriods = 10;
 
-	for(x=0;x<ValueSeries1.length;x++)
+	if(Option == 3)
+		Max = 100;
+	else
 	{
-		if(Max < ValueSeries1[x])
-			Max = ValueSeries1[x];
-		if(Max < ValueSeries2[x])
-			Max = ValueSeries2[x];
+		for(x=0;x<ValueSeries1.length;x++)
+		{
+			if(Max < ValueSeries1[x])
+				Max = ValueSeries1[x];
+			if(Max < ValueSeries2[x])
+				Max = ValueSeries2[x];
+		}
 	}
 
 	YScale = SizeXY[1] / Max;
@@ -669,6 +688,18 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	ctx.stroke();
 	ctx.closePath();
 	ctx.fill();
+
+	// draw calibration lines
+	ctx.strokeStyle = "white";
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]/4));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+(SizeXY[1]/4));
+	ctx.stroke();
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]/2));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+(SizeXY[1]/2));
+	ctx.stroke();
+	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1] * 0.75));
+	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+(SizeXY[1] * 0.75));
+	ctx.stroke();
 
 	ctx.textAlign = "left";
 	ctx.textBaseline = "bottom";
@@ -1077,6 +1108,7 @@ CountySelect.onchange = function()
 {
 	var ChartDim = [800,350];
 	var ChartLoc = [340,50];
+	var VaccineData = false;
 
 	RefreshOptionFields();
 
@@ -1092,7 +1124,7 @@ CountySelect.onchange = function()
 
 		for(x=0;x<ReportDate.length;x++)
 		{
-			DataArray[x] = { Cases:0, Deaths:0, Pop:0, SqMi:0, Adm:"Entire State", Prov:State };
+			DataArray[x] = { Cases:0, Deaths:0, Pop:0, SqMi:0, Adm:"Entire State", Prov:State, Date: ReportDate[x].Date };
 			for(y=0;y<ReportDate[x].Data.length;y++)
 			{
 				if(ReportDate[x].Data[y].Prov.localeCompare(State) == 0)
@@ -1168,6 +1200,18 @@ CountySelect.onchange = function()
 		var Deaths = [];
 		var DeltaCases = [];
 		var DeltaDeaths = [];
+		var FullyVaccinatedPer100 = [];
+
+		// find correct state vaccine stats
+		for(v=0;v<VaxStatsByState.length;v++)
+		{
+			if(VaxStatsByState[v].Location.localeCompare(State) == 0)
+				break;
+		}
+		if(v == VaxStatsByState)
+			console.log("Could not find vaccination stats for state " + State);
+		else
+			VaccineData = true;
 
 		for(x=0;x<DataArray.length;x++)
 		{
@@ -1175,6 +1219,18 @@ CountySelect.onchange = function()
 			Deaths[x] = DataArray[x].Deaths;
 			DeltaCases[x] = DataArray[x].DeltaCases;
 			DeltaDeaths[x] = DataArray[x].DeltaDeaths;
+
+			if(VaccineData)
+			{
+				for(y=0;y<VaxStatsByState[v].Data.length;y++)
+				{
+					if(VaxStatsByState[v].Data[y].Date.localeCompare(DataArray[x].Date)== 0)
+					{
+						FullyVaccinatedPer100[x] = VaxStatsByState[v].Data[y].PeopleFullyVaccinatedPer100;
+						break;
+					}
+				}
+			}
 		}
 
 		ClickData = DataArray[x-1];
@@ -1205,6 +1261,10 @@ CountySelect.onchange = function()
 		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+100],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Daily Cases With 10 Day Trend",DeltaCases,DeltaDeaths,0);
 
 		DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+120,ChartDim[0],DateStrings);
+
+		XYChart([ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+200],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Vaccinated Percentage",FullyVaccinatedPer100,[],3);
+
+		DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*3)+220,ChartDim[0],DateStrings);
 
 		return;
 	}
