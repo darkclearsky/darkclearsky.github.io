@@ -409,6 +409,8 @@
 <script src=USAData_431.js></script>
 <script src=USAData_432.js></script>
 <script src=USAData_433.js></script>
+<script src=USAData_434.js></script>
+<script src=USAData_435.js></script>
 
 <script>
 
@@ -1204,6 +1206,7 @@ CountySelect.onchange = function()
 		var DeltaCases = [];
 		var DeltaDeaths = [];
 		var FullyVaccinatedPer100 = [];
+		var VaccinatedPer100 = [];
 
 		// find correct state vaccine stats
 		for(v=0;v<VaxStatsByState.length;v++)
@@ -1230,6 +1233,7 @@ CountySelect.onchange = function()
 					if(VaxStatsByState[v].Data[y].Date.localeCompare(DataArray[x].Date)== 0)
 					{
 						FullyVaccinatedPer100[x] = VaxStatsByState[v].Data[y].PeopleFullyVaccinatedPer100;
+						VaccinatedPer100[x] = VaxStatsByState[v].Data[y].PeopleVaccinatedPer100;
 						break;
 					}
 				}
@@ -1257,15 +1261,15 @@ CountySelect.onchange = function()
 		
 		DrawCountyData();
 
-		XYChart(ChartLoc,ChartDim,ReportDate.length-1,"Total Cases",Cases,Deaths,1);
+		XYChart(ChartLoc,ChartDim,ReportDate.length-1,"Total Cases & Deaths",Cases,Deaths,1);
 
 		DrawDates(ChartLoc[0],ChartLoc[1]+ChartDim[1]+20,ChartDim[0],DateStrings);
 
-		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+100],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Daily Cases With 10 Day Trend",DeltaCases,DeltaDeaths,0);
+		XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+100],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Daily Cases and Deaths With 10 Day Case Trend",DeltaCases,DeltaDeaths,0);
 
 		DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+120,ChartDim[0],DateStrings);
 
-		XYChart([ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+200],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Vaccinated Percentage",FullyVaccinatedPer100,[],3);
+		XYChart([ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+200],[ChartDim[0],ChartDim[1]],ReportDate.length-1,"Fully and Partially Vaccinated Percentages",VaccinatedPer100,FullyVaccinatedPer100,3);
 
 		DrawDates(ChartLoc[0],ChartLoc[1]+(ChartDim[1]*3)+220,ChartDim[0],DateStrings);
 

@@ -467,6 +467,8 @@
 <script src=IntData_431.js></script>
 <script src=IntData_432.js></script>
 <script src=IntData_433.js></script>
+<script src=IntData_434.js></script>
+<script src=IntData_435.js></script>
 
 <script>
 
@@ -1148,6 +1150,7 @@ StateSelect.onchange = function()
 	var DeltaCases = [];
 	var DeltaDeaths = [];
 	var TotalVaccinations = [];
+	var PeopleFullyVaccinatedPercentage = [];
 	var PeopleVaccinatedPercentage = [];
 	var DailyVaccinations = [];
 
@@ -1167,6 +1170,7 @@ StateSelect.onchange = function()
 			if(y == VaccineClickData.Data.length)	// not found - zero out
 			{
 				TotalVaccinations[x] = 0;
+				PeopleFullyVaccinatedPercentage[x] = 0;
 				PeopleVaccinatedPercentage[x] = 0;
 				DailyVaccinations[x] = 0;
 			}
@@ -1175,16 +1179,25 @@ StateSelect.onchange = function()
 				if(VaccineClickData.Data[y].Pop != 0)
 				{
 					TotalVaccinations[x] = VaccineClickData.Data[y].TotalVaccinations;
+
+					if(VaccineClickData.Data[y].PeopleFullyVaccinated != 0)
+						PeopleFullyVaccinatedPercentage[x] = (VaccineClickData.Data[y].PeopleFullyVaccinated / (VaccineClickData.Data[y].Pop * 1000) * 100);
+					else
+						if(x!=0)
+							PeopleFullyVaccinatedPercentage[x] = PeopleFullyVaccinatedPercentage[x-1];
+
 					if(VaccineClickData.Data[y].PeopleVaccinated != 0)
 						PeopleVaccinatedPercentage[x] = (VaccineClickData.Data[y].PeopleVaccinated / (VaccineClickData.Data[y].Pop * 1000) * 100);
 					else
 						if(x!=0)
 							PeopleVaccinatedPercentage[x] = PeopleVaccinatedPercentage[x-1];
+
 					DailyVaccinations[x] = VaccineClickData.Data[y].DailyVaccinations;
 				}
 				else
 				{
 					TotalVaccinations[x] = 0;
+					PeopleFullyVaccinatedPercentage[x] = 0;
 					PeopleVaccinatedPercentage[x] = 0;
 					DailyVaccinations[x] = 0;
 				}
@@ -1193,6 +1206,7 @@ StateSelect.onchange = function()
 		else	// data was not present - zero it out
 		{
 			TotalVaccinations[x] = 0;
+			PeopleFullyVaccinatedPercentage[x] = 0;
 			PeopleVaccinatedPercentage[x] = 0;
 			DailyVaccinations[x] = 0;
 		}
@@ -1204,11 +1218,11 @@ StateSelect.onchange = function()
 
 	XYChart(ChartLoc,ChartDim,ReportDate.length-1,["Days since 3/22","Total Cases"],Cases,Deaths,1);
 
-	// XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]/3],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
-	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Daily Cases With 10 Day Trend"],DeltaCases,DeltaDeaths,0);
+	// XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]/3],ReportDate.length-1,["Days since 3/22","Daily Cases and Deaths With 10 Day Case Trend"],DeltaCases,DeltaDeaths,0);
+	XYChart([ChartLoc[0],ChartLoc[1]+ChartDim[1]+70],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Daily Cases and Deaths With 10 Day Case Trend"],DeltaCases,DeltaDeaths,0);
 
 	if((typeof VaccineClickData).localeCompare("object") == 0)
-		XYChart([ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+140],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Vaccinated People % of Population"],PeopleVaccinatedPercentage,[],3);
+		XYChart([ChartLoc[0],ChartLoc[1]+(ChartDim[1]*2)+140],[ChartDim[0],ChartDim[1]],ReportDate.length-1,["Days since 3/22","Fully Vaccinated and Partially Vaccinated People % of Population"],PeopleVaccinatedPercentage,PeopleFullyVaccinatedPercentage,3);
 }
 
 </script>
