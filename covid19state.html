@@ -429,6 +429,12 @@
 <script src=USAData_451.js></script>
 <script src=USAData_452.js></script>
 <script src=USAData_453.js></script>
+<script src=USAData_454.js></script>
+<script src=USAData_455.js></script>
+<script src=USAData_456.js></script>
+<script src=USAData_457.js></script>
+<script src=USAData_458.js></script>
+<script src=USAData_459.js></script>
 
 <script>
 
@@ -538,16 +544,39 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	var RunningAverage = [];
 	var RunningAveragePeriods = 10;
 
-	if(Option == 3)
-		Max = 100;
-	else
+	if(Option == 0)
 	{
+		var GoBack;
 		for(x=0;x<ValueSeries1.length;x++)
 		{
-			if(Max < ValueSeries1[x])
-				Max = ValueSeries1[x];
-			if(Max < ValueSeries2[x])
-				Max = ValueSeries2[x];
+			if(x < RunningAveragePeriods)
+				GoBack = 0;
+			else
+				GoBack = x - RunningAveragePeriods;
+
+			RunningAverage[x] = 0;
+			for(y=GoBack;y<x;y++)
+				RunningAverage[x] += ValueSeries1[y];
+			if(x != 0)
+				RunningAverage[x] /= (x - GoBack);
+
+			if(Max < RunningAverage[x])
+				Max = RunningAverage[x];
+		}
+	}
+	else
+	{
+		if(Option == 3)
+			Max = 100;
+		else
+		{
+			for(x=0;x<ValueSeries1.length;x++)
+			{
+				if(Max < ValueSeries1[x])
+					Max = ValueSeries1[x];
+				if(Max < ValueSeries2[x])
+					Max = ValueSeries2[x];
+			}
 		}
 	}
 
@@ -616,32 +645,34 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	ctx.strokeStyle = "darkred";
 	ctx.fillStyle = "darkred";
 	ctx.beginPath();
-	//ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-ValueSeries1[0]));
-	ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
-	for(x=1;x<ValueSeries1.length;x++)
-		ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+	if(Option == 0)
+	{
+		if(ValueSeries1[0] > RunningAverage[0])
+			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(RunningAverage[0]*YScale)));
+		else
+			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
+		for(x=1;x<ValueSeries1.length;x++)
+		{
+			if(ValueSeries1[x] > RunningAverage[x])
+				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(RunningAverage[x]*YScale)));
+			else
+				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+		}
+	}
+	else
+	{
+		ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
+		for(x=1;x<ValueSeries1.length;x++)
+			ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
+	}
 	ctx.lineTo(TopLeft[0]+SizeXY[0],TopLeft[1]+SizeXY[1]);
 	ctx.lineTo(TopLeft[0],TopLeft[1]+SizeXY[1]);
 	ctx.stroke();
 	ctx.closePath();
 	ctx.fill();
 
-	if(Option == 0)	// do 10 day running average
+	if(Option == 0)	// do 10 day running average - figured out above
 	{
-		var GoBack;
-		for(x=0;x<ValueSeries1.length;x++)
-		{
-			if(x < RunningAveragePeriods)
-				GoBack = 0;
-			else
-				GoBack = x - RunningAveragePeriods;
-
-			RunningAverage[x] = 0;
-			for(y=GoBack;y<x;y++)
-				RunningAverage[x] += ValueSeries1[y];
-			if(x != 0)
-				RunningAverage[x] /= (x - GoBack);
-		}
 		ctx.globalAlpha = 0.5;
 		ctx.strokeStyle = "black";
 		ctx.beginPath();
