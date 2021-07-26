@@ -193,7 +193,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":33.85,"PeopleVaccinatedPer100":41.5 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":33.91,"PeopleVaccinatedPer100":41.63 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":33.92,"PeopleVaccinatedPer100":41.64 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":33.97,"PeopleVaccinatedPer100":41.79 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":33.97,"PeopleVaccinatedPer100":41.79 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":34.04,"PeopleVaccinatedPer100":41.99 }
 		]},
 	{"Location":"Alaska",
 		"Data":[
@@ -390,7 +391,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":45.05,"PeopleVaccinatedPer100":50.72 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":45.11,"PeopleVaccinatedPer100":50.78 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":45.17,"PeopleVaccinatedPer100":50.87 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":45.23,"PeopleVaccinatedPer100":50.97 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":45.23,"PeopleVaccinatedPer100":50.97 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":45.24,"PeopleVaccinatedPer100":50.98 }
 		]},
 	{"Location":"American Samoa",
 		"Data":[
@@ -587,7 +589,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":41.02,"PeopleVaccinatedPer100":49.95 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":41.06,"PeopleVaccinatedPer100":50.0 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":41.07,"PeopleVaccinatedPer100":50.0 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":41.29,"PeopleVaccinatedPer100":50.24 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":41.29,"PeopleVaccinatedPer100":50.24 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":41.29,"PeopleVaccinatedPer100":50.24 }
 		]},
 	{"Location":"Arizona",
 		"Data":[
@@ -784,7 +787,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":44.64,"PeopleVaccinatedPer100":51.99 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":44.71,"PeopleVaccinatedPer100":52.09 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":44.78,"PeopleVaccinatedPer100":52.19 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.85,"PeopleVaccinatedPer100":52.29 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.85,"PeopleVaccinatedPer100":52.29 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":44.92,"PeopleVaccinatedPer100":52.39 }
 		]},
 	{"Location":"Arkansas",
 		"Data":[
@@ -981,7 +985,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":35.53,"PeopleVaccinatedPer100":44.34 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":35.62,"PeopleVaccinatedPer100":44.59 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":35.7,"PeopleVaccinatedPer100":44.83 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":35.86,"PeopleVaccinatedPer100":45.16 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":35.86,"PeopleVaccinatedPer100":45.16 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":35.95,"PeopleVaccinatedPer100":45.48 }
 		]},
 	{"Location":"Bureau of Prisons",
 		"Data":[
@@ -1178,7 +1183,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
 		]},
 	{"Location":"California",
 		"Data":[
@@ -1375,7 +1381,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":51.92,"PeopleVaccinatedPer100":63.5 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":52.02,"PeopleVaccinatedPer100":63.62 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":52.12,"PeopleVaccinatedPer100":63.76 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":52.22,"PeopleVaccinatedPer100":63.89 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":52.22,"PeopleVaccinatedPer100":63.89 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":52.34,"PeopleVaccinatedPer100":64.06 }
 		]},
 	{"Location":"Colorado",
 		"Data":[
@@ -1572,7 +1579,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":53.68,"PeopleVaccinatedPer100":59.37 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":53.77,"PeopleVaccinatedPer100":59.47 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":53.85,"PeopleVaccinatedPer100":59.55 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":53.95,"PeopleVaccinatedPer100":59.66 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":53.95,"PeopleVaccinatedPer100":59.66 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":54.01,"PeopleVaccinatedPer100":59.74 }
 		]},
 	{"Location":"Connecticut",
 		"Data":[
@@ -1769,7 +1777,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":62.49,"PeopleVaccinatedPer100":68.73 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":62.6,"PeopleVaccinatedPer100":68.85 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":62.7,"PeopleVaccinatedPer100":68.98 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":62.79,"PeopleVaccinatedPer100":69.1 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":62.79,"PeopleVaccinatedPer100":69.1 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":62.87,"PeopleVaccinatedPer100":69.22 }
 		]},
 	{"Location":"Delaware",
 		"Data":[
@@ -1966,7 +1975,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":51.92,"PeopleVaccinatedPer100":59.67 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":52.01,"PeopleVaccinatedPer100":59.76 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":52.11,"PeopleVaccinatedPer100":59.89 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":52.21,"PeopleVaccinatedPer100":60.0 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":52.21,"PeopleVaccinatedPer100":60.0 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":52.31,"PeopleVaccinatedPer100":60.11 }
 		]},
 	{"Location":"Dept of Defense",
 		"Data":[
@@ -2163,7 +2173,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
 		]},
 	{"Location":"District of Columbia",
 		"Data":[
@@ -2360,7 +2371,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":54.06,"PeopleVaccinatedPer100":63.03 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":54.14,"PeopleVaccinatedPer100":63.12 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":54.22,"PeopleVaccinatedPer100":63.19 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":54.32,"PeopleVaccinatedPer100":63.31 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":54.32,"PeopleVaccinatedPer100":63.31 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":54.4,"PeopleVaccinatedPer100":63.42 }
 		]},
 	{"Location":"Federated States of Micronesia",
 		"Data":[
@@ -2557,7 +2569,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":27.33,"PeopleVaccinatedPer100":31.48 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":27.51,"PeopleVaccinatedPer100":31.66 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":27.74,"PeopleVaccinatedPer100":31.77 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":27.74,"PeopleVaccinatedPer100":31.77 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":27.74,"PeopleVaccinatedPer100":31.77 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":27.75,"PeopleVaccinatedPer100":31.77 }
 		]},
 	{"Location":"Florida",
 		"Data":[
@@ -2754,7 +2767,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":47.94,"PeopleVaccinatedPer100":55.87 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":48.05,"PeopleVaccinatedPer100":56.02 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":48.15,"PeopleVaccinatedPer100":56.17 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":48.23,"PeopleVaccinatedPer100":56.29 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":48.23,"PeopleVaccinatedPer100":56.29 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":48.46,"PeopleVaccinatedPer100":56.7 }
 		]},
 	{"Location":"Georgia",
 		"Data":[
@@ -2951,7 +2965,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":38.02,"PeopleVaccinatedPer100":45.05 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":38.03,"PeopleVaccinatedPer100":45.06 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":38.03,"PeopleVaccinatedPer100":45.07 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":38.04,"PeopleVaccinatedPer100":45.07 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":38.04,"PeopleVaccinatedPer100":45.07 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":38.04,"PeopleVaccinatedPer100":45.08 }
 		]},
 	{"Location":"Guam",
 		"Data":[
@@ -3148,7 +3163,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":58.08,"PeopleVaccinatedPer100":64.17 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":58.08,"PeopleVaccinatedPer100":64.17 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":58.41,"PeopleVaccinatedPer100":64.48 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":58.42,"PeopleVaccinatedPer100":64.49 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":58.42,"PeopleVaccinatedPer100":64.49 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":58.56,"PeopleVaccinatedPer100":64.6 }
 		]},
 	{"Location":"Hawaii",
 		"Data":[
@@ -3345,7 +3361,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":53.07,"PeopleVaccinatedPer100":70.74 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":53.12,"PeopleVaccinatedPer100":70.8 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":53.18,"PeopleVaccinatedPer100":70.88 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":53.19,"PeopleVaccinatedPer100":70.89 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":53.19,"PeopleVaccinatedPer100":70.89 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":53.26,"PeopleVaccinatedPer100":70.98 }
 		]},
 	{"Location":"Idaho",
 		"Data":[
@@ -3542,7 +3559,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":36.98,"PeopleVaccinatedPer100":40.47 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":37.03,"PeopleVaccinatedPer100":40.53 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":37.07,"PeopleVaccinatedPer100":40.6 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":37.11,"PeopleVaccinatedPer100":40.66 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":37.11,"PeopleVaccinatedPer100":40.66 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":37.16,"PeopleVaccinatedPer100":40.74 }
 		]},
 	{"Location":"Illinois",
 		"Data":[
@@ -3739,7 +3757,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":47.84,"PeopleVaccinatedPer100":61.21 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":47.93,"PeopleVaccinatedPer100":61.33 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":48.01,"PeopleVaccinatedPer100":61.45 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":48.08,"PeopleVaccinatedPer100":61.54 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":48.08,"PeopleVaccinatedPer100":61.54 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":48.14,"PeopleVaccinatedPer100":61.65 }
 		]},
 	{"Location":"Indian Health Svc",
 		"Data":[
@@ -3936,7 +3955,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":32.42,"PeopleVaccinatedPer100":39.24 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":32.46,"PeopleVaccinatedPer100":39.32 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":32.51,"PeopleVaccinatedPer100":39.4 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":32.55,"PeopleVaccinatedPer100":39.48 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":32.55,"PeopleVaccinatedPer100":39.48 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":32.58,"PeopleVaccinatedPer100":39.55 }
 		]},
 	{"Location":"Indiana",
 		"Data":[
@@ -4133,7 +4153,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.64,"PeopleVaccinatedPer100":46.34 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":43.72,"PeopleVaccinatedPer100":46.44 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":43.8,"PeopleVaccinatedPer100":46.53 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.87,"PeopleVaccinatedPer100":46.62 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.87,"PeopleVaccinatedPer100":46.62 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":43.93,"PeopleVaccinatedPer100":46.72 }
 		]},
 	{"Location":"Iowa",
 		"Data":[
@@ -4330,7 +4351,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":49.15,"PeopleVaccinatedPer100":52.46 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":49.2,"PeopleVaccinatedPer100":52.55 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":49.26,"PeopleVaccinatedPer100":52.63 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":49.32,"PeopleVaccinatedPer100":52.72 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":49.32,"PeopleVaccinatedPer100":52.72 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":49.32,"PeopleVaccinatedPer100":52.72 }
 		]},
 	{"Location":"Kansas",
 		"Data":[
@@ -4527,7 +4549,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.16,"PeopleVaccinatedPer100":50.54 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":43.23,"PeopleVaccinatedPer100":50.66 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":43.31,"PeopleVaccinatedPer100":50.77 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.8,"PeopleVaccinatedPer100":52.41 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.8,"PeopleVaccinatedPer100":52.41 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":44.88,"PeopleVaccinatedPer100":52.58 }
 		]},
 	{"Location":"Kentucky",
 		"Data":[
@@ -4724,7 +4747,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":44.92,"PeopleVaccinatedPer100":50.87 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":44.99,"PeopleVaccinatedPer100":50.98 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":45.07,"PeopleVaccinatedPer100":51.11 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":45.14,"PeopleVaccinatedPer100":51.23 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":45.14,"PeopleVaccinatedPer100":51.23 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":45.21,"PeopleVaccinatedPer100":51.37 }
 		]},
 	{"Location":"Long Term Care",
 		"Data":[
@@ -4921,7 +4945,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
 		]},
 	{"Location":"Louisiana",
 		"Data":[
@@ -5118,7 +5143,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":36.28,"PeopleVaccinatedPer100":40.12 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":36.35,"PeopleVaccinatedPer100":40.28 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":36.43,"PeopleVaccinatedPer100":40.47 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":36.49,"PeopleVaccinatedPer100":40.7 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":36.49,"PeopleVaccinatedPer100":40.7 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":36.57,"PeopleVaccinatedPer100":40.97 }
 		]},
 	{"Location":"Maine",
 		"Data":[
@@ -5315,7 +5341,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":62.95,"PeopleVaccinatedPer100":67.6 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":63.03,"PeopleVaccinatedPer100":67.68 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":63.09,"PeopleVaccinatedPer100":67.77 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":63.16,"PeopleVaccinatedPer100":67.87 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":63.16,"PeopleVaccinatedPer100":67.87 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":63.17,"PeopleVaccinatedPer100":67.88 }
 		]},
 	{"Location":"Marshall Islands",
 		"Data":[
@@ -5512,7 +5539,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":29.06,"PeopleVaccinatedPer100":33.44 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":29.14,"PeopleVaccinatedPer100":33.64 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":29.28,"PeopleVaccinatedPer100":33.84 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":29.3,"PeopleVaccinatedPer100":33.9 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":29.3,"PeopleVaccinatedPer100":33.9 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":29.33,"PeopleVaccinatedPer100":33.95 }
 		]},
 	{"Location":"Maryland",
 		"Data":[
@@ -5709,7 +5737,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":58.03,"PeopleVaccinatedPer100":63.64 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":58.13,"PeopleVaccinatedPer100":63.75 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":58.22,"PeopleVaccinatedPer100":63.85 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":58.31,"PeopleVaccinatedPer100":63.97 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":58.31,"PeopleVaccinatedPer100":63.97 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":58.38,"PeopleVaccinatedPer100":64.08 }
 		]},
 	{"Location":"Massachusetts",
 		"Data":[
@@ -5906,7 +5935,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":63.27,"PeopleVaccinatedPer100":71.81 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":63.35,"PeopleVaccinatedPer100":71.89 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":63.42,"PeopleVaccinatedPer100":71.97 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":63.48,"PeopleVaccinatedPer100":72.06 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":63.48,"PeopleVaccinatedPer100":72.06 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":63.55,"PeopleVaccinatedPer100":72.15 }
 		]},
 	{"Location":"Michigan",
 		"Data":[
@@ -6103,7 +6133,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":48.38,"PeopleVaccinatedPer100":52.49 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":48.44,"PeopleVaccinatedPer100":52.56 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":48.5,"PeopleVaccinatedPer100":52.63 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":48.55,"PeopleVaccinatedPer100":52.7 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":48.55,"PeopleVaccinatedPer100":52.7 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":48.61,"PeopleVaccinatedPer100":52.77 }
 		]},
 	{"Location":"Minnesota",
 		"Data":[
@@ -6300,7 +6331,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":53.21,"PeopleVaccinatedPer100":58.05 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":53.28,"PeopleVaccinatedPer100":58.13 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":53.35,"PeopleVaccinatedPer100":58.21 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":53.43,"PeopleVaccinatedPer100":58.3 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":53.43,"PeopleVaccinatedPer100":58.3 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":53.48,"PeopleVaccinatedPer100":58.38 }
 		]},
 	{"Location":"Mississippi",
 		"Data":[
@@ -6497,7 +6529,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":33.95,"PeopleVaccinatedPer100":38.08 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":34.02,"PeopleVaccinatedPer100":38.26 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":34.02,"PeopleVaccinatedPer100":38.26 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":34.17,"PeopleVaccinatedPer100":38.62 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":34.17,"PeopleVaccinatedPer100":38.62 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":34.18,"PeopleVaccinatedPer100":38.64 }
 		]},
 	{"Location":"Missouri",
 		"Data":[
@@ -6694,7 +6727,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":40.39,"PeopleVaccinatedPer100":47.03 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":40.49,"PeopleVaccinatedPer100":47.22 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":40.59,"PeopleVaccinatedPer100":47.39 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":40.74,"PeopleVaccinatedPer100":47.61 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":40.74,"PeopleVaccinatedPer100":47.61 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":40.82,"PeopleVaccinatedPer100":47.79 }
 		]},
 	{"Location":"Montana",
 		"Data":[
@@ -6891,7 +6925,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.9,"PeopleVaccinatedPer100":48.69 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":43.95,"PeopleVaccinatedPer100":48.75 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":44.01,"PeopleVaccinatedPer100":48.83 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.06,"PeopleVaccinatedPer100":48.92 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.06,"PeopleVaccinatedPer100":48.92 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":44.07,"PeopleVaccinatedPer100":48.93 }
 		]},
 	{"Location":"Nebraska",
 		"Data":[
@@ -7088,7 +7123,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":48.93,"PeopleVaccinatedPer100":52.89 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":48.93,"PeopleVaccinatedPer100":52.9 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":48.94,"PeopleVaccinatedPer100":52.9 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":49.14,"PeopleVaccinatedPer100":53.2 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":49.14,"PeopleVaccinatedPer100":53.2 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":49.19,"PeopleVaccinatedPer100":53.28 }
 		]},
 	{"Location":"Nevada",
 		"Data":[
@@ -7285,7 +7321,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.56,"PeopleVaccinatedPer100":52.09 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":43.64,"PeopleVaccinatedPer100":52.22 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":43.72,"PeopleVaccinatedPer100":52.38 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.82,"PeopleVaccinatedPer100":52.57 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.82,"PeopleVaccinatedPer100":52.57 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":43.9,"PeopleVaccinatedPer100":52.71 }
 		]},
 	{"Location":"New Hampshire",
 		"Data":[
@@ -7482,7 +7519,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":57.82,"PeopleVaccinatedPer100":64.0 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":57.87,"PeopleVaccinatedPer100":64.06 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":57.9,"PeopleVaccinatedPer100":64.11 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":57.95,"PeopleVaccinatedPer100":64.19 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":57.95,"PeopleVaccinatedPer100":64.19 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":57.98,"PeopleVaccinatedPer100":64.25 }
 		]},
 	{"Location":"New Jersey",
 		"Data":[
@@ -7679,7 +7717,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":57.28,"PeopleVaccinatedPer100":64.73 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":57.38,"PeopleVaccinatedPer100":64.86 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":57.48,"PeopleVaccinatedPer100":64.98 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":57.6,"PeopleVaccinatedPer100":65.13 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":57.6,"PeopleVaccinatedPer100":65.13 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":57.69,"PeopleVaccinatedPer100":65.24 }
 		]},
 	{"Location":"New Mexico",
 		"Data":[
@@ -7876,7 +7915,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":56.34,"PeopleVaccinatedPer100":64.4 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":56.45,"PeopleVaccinatedPer100":64.53 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":56.54,"PeopleVaccinatedPer100":64.63 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":56.61,"PeopleVaccinatedPer100":64.73 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":56.61,"PeopleVaccinatedPer100":64.73 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":56.68,"PeopleVaccinatedPer100":64.83 }
 		]},
 	{"Location":"New York State",
 		"Data":[
@@ -8073,7 +8113,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":56.2,"PeopleVaccinatedPer100":61.91 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":56.31,"PeopleVaccinatedPer100":62.03 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":56.4,"PeopleVaccinatedPer100":62.14 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":56.52,"PeopleVaccinatedPer100":62.28 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":56.52,"PeopleVaccinatedPer100":62.28 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":56.57,"PeopleVaccinatedPer100":62.35 }
 		]},
 	{"Location":"North Carolina",
 		"Data":[
@@ -8270,7 +8311,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.16,"PeopleVaccinatedPer100":50.07 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":43.22,"PeopleVaccinatedPer100":50.16 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":43.27,"PeopleVaccinatedPer100":50.24 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.37,"PeopleVaccinatedPer100":50.4 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.37,"PeopleVaccinatedPer100":50.4 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":43.44,"PeopleVaccinatedPer100":50.53 }
 		]},
 	{"Location":"North Dakota",
 		"Data":[
@@ -8467,7 +8509,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":39.68,"PeopleVaccinatedPer100":44.71 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":39.74,"PeopleVaccinatedPer100":44.78 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":39.79,"PeopleVaccinatedPer100":44.87 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":39.85,"PeopleVaccinatedPer100":44.97 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":39.85,"PeopleVaccinatedPer100":44.97 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":39.9,"PeopleVaccinatedPer100":45.06 }
 		]},
 	{"Location":"Northern Mariana Islands",
 		"Data":[
@@ -8664,7 +8707,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":50.55,"PeopleVaccinatedPer100":55.32 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":50.6,"PeopleVaccinatedPer100":55.62 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":50.75,"PeopleVaccinatedPer100":55.78 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":50.88,"PeopleVaccinatedPer100":55.93 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":50.88,"PeopleVaccinatedPer100":55.93 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":50.88,"PeopleVaccinatedPer100":55.93 }
 		]},
 	{"Location":"Ohio",
 		"Data":[
@@ -8861,7 +8905,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":45.96,"PeopleVaccinatedPer100":49.15 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":46.02,"PeopleVaccinatedPer100":49.22 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":46.08,"PeopleVaccinatedPer100":49.3 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":46.13,"PeopleVaccinatedPer100":49.37 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":46.13,"PeopleVaccinatedPer100":49.37 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":46.18,"PeopleVaccinatedPer100":49.44 }
 		]},
 	{"Location":"Oklahoma",
 		"Data":[
@@ -9058,7 +9103,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":39.64,"PeopleVaccinatedPer100":46.42 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":39.71,"PeopleVaccinatedPer100":46.57 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":39.78,"PeopleVaccinatedPer100":46.71 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":39.85,"PeopleVaccinatedPer100":46.87 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":39.85,"PeopleVaccinatedPer100":46.87 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":39.87,"PeopleVaccinatedPer100":46.91 }
 		]},
 	{"Location":"Oregon",
 		"Data":[
@@ -9255,7 +9301,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":55.35,"PeopleVaccinatedPer100":59.94 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":55.35,"PeopleVaccinatedPer100":59.94 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":55.51,"PeopleVaccinatedPer100":60.09 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":55.51,"PeopleVaccinatedPer100":60.1 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":55.51,"PeopleVaccinatedPer100":60.1 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":55.66,"PeopleVaccinatedPer100":60.25 }
 		]},
 	{"Location":"Pennsylvania",
 		"Data":[
@@ -9452,7 +9499,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":51.49,"PeopleVaccinatedPer100":64.48 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":51.56,"PeopleVaccinatedPer100":64.57 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":51.66,"PeopleVaccinatedPer100":64.69 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":51.76,"PeopleVaccinatedPer100":64.81 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":51.76,"PeopleVaccinatedPer100":64.81 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":51.84,"PeopleVaccinatedPer100":64.91 }
 		]},
 	{"Location":"Puerto Rico",
 		"Data":[
@@ -9649,7 +9697,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":58.85,"PeopleVaccinatedPer100":67.83 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":59.18,"PeopleVaccinatedPer100":68.13 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":59.18,"PeopleVaccinatedPer100":68.13 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":59.3,"PeopleVaccinatedPer100":68.23 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":59.3,"PeopleVaccinatedPer100":68.23 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":59.42,"PeopleVaccinatedPer100":68.36 }
 		]},
 	{"Location":"Republic of Palau",
 		"Data":[
@@ -9846,7 +9895,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":75.15,"PeopleVaccinatedPer100":80.96 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":75.15,"PeopleVaccinatedPer100":80.96 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":75.16,"PeopleVaccinatedPer100":80.95 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":75.16,"PeopleVaccinatedPer100":80.96 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":75.16,"PeopleVaccinatedPer100":80.96 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":75.16,"PeopleVaccinatedPer100":80.96 }
 		]},
 	{"Location":"Rhode Island",
 		"Data":[
@@ -10043,7 +10093,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":60.66,"PeopleVaccinatedPer100":66.1 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":60.77,"PeopleVaccinatedPer100":66.21 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":60.85,"PeopleVaccinatedPer100":66.31 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":60.93,"PeopleVaccinatedPer100":66.43 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":60.93,"PeopleVaccinatedPer100":66.43 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":61.01,"PeopleVaccinatedPer100":66.53 }
 		]},
 	{"Location":"South Carolina",
 		"Data":[
@@ -10240,7 +10291,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":40.01,"PeopleVaccinatedPer100":45.61 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":40.09,"PeopleVaccinatedPer100":45.72 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":40.15,"PeopleVaccinatedPer100":45.82 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":40.21,"PeopleVaccinatedPer100":45.93 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":40.21,"PeopleVaccinatedPer100":45.93 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":40.29,"PeopleVaccinatedPer100":46.06 }
 		]},
 	{"Location":"South Dakota",
 		"Data":[
@@ -10437,7 +10489,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":46.36,"PeopleVaccinatedPer100":51.65 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":46.5,"PeopleVaccinatedPer100":51.86 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":46.55,"PeopleVaccinatedPer100":51.98 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":46.62,"PeopleVaccinatedPer100":52.1 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":46.62,"PeopleVaccinatedPer100":52.1 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":46.63,"PeopleVaccinatedPer100":52.13 }
 		]},
 	{"Location":"Tennessee",
 		"Data":[
@@ -10634,7 +10687,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":38.54,"PeopleVaccinatedPer100":43.59 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":38.62,"PeopleVaccinatedPer100":43.71 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":38.68,"PeopleVaccinatedPer100":43.81 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":38.74,"PeopleVaccinatedPer100":43.92 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":38.74,"PeopleVaccinatedPer100":43.92 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":38.8,"PeopleVaccinatedPer100":44.06 }
 		]},
 	{"Location":"Texas",
 		"Data":[
@@ -10831,7 +10885,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.06,"PeopleVaccinatedPer100":50.05 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":43.12,"PeopleVaccinatedPer100":50.25 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":43.2,"PeopleVaccinatedPer100":50.39 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.2,"PeopleVaccinatedPer100":50.39 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":43.2,"PeopleVaccinatedPer100":50.39 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":43.37,"PeopleVaccinatedPer100":50.69 }
 		]},
 	{"Location":"United States",
 		"Data":[
@@ -11051,7 +11106,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":48.76,"PeopleVaccinatedPer100":56.27 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":48.85,"PeopleVaccinatedPer100":56.39 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":48.93,"PeopleVaccinatedPer100":56.5 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":49.01,"PeopleVaccinatedPer100":56.62 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":49.01,"PeopleVaccinatedPer100":56.62 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":49.1,"PeopleVaccinatedPer100":56.77 }
 		]},
 	{"Location":"Utah",
 		"Data":[
@@ -11248,7 +11304,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":43.96,"PeopleVaccinatedPer100":50.92 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":44.21,"PeopleVaccinatedPer100":51.24 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":44.21,"PeopleVaccinatedPer100":51.25 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.22,"PeopleVaccinatedPer100":51.25 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":44.22,"PeopleVaccinatedPer100":51.25 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":44.22,"PeopleVaccinatedPer100":51.25 }
 		]},
 	{"Location":"Vermont",
 		"Data":[
@@ -11445,7 +11502,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":67.07,"PeopleVaccinatedPer100":74.98 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":67.12,"PeopleVaccinatedPer100":75.04 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":67.17,"PeopleVaccinatedPer100":75.09 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":67.22,"PeopleVaccinatedPer100":75.15 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":67.22,"PeopleVaccinatedPer100":75.15 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":67.28,"PeopleVaccinatedPer100":75.21 }
 		]},
 	{"Location":"Veterans Health",
 		"Data":[
@@ -11642,7 +11700,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":"","PeopleVaccinatedPer100":"" }
 		]},
 	{"Location":"Virgin Islands",
 		"Data":[
@@ -11839,7 +11898,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":35.11,"PeopleVaccinatedPer100":41.23 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":35.19,"PeopleVaccinatedPer100":41.4 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":35.29,"PeopleVaccinatedPer100":41.64 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":35.37,"PeopleVaccinatedPer100":41.94 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":35.37,"PeopleVaccinatedPer100":41.94 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":35.38,"PeopleVaccinatedPer100":41.95 }
 		]},
 	{"Location":"Virginia",
 		"Data":[
@@ -12036,7 +12096,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":53.73,"PeopleVaccinatedPer100":60.67 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":53.82,"PeopleVaccinatedPer100":60.76 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":53.92,"PeopleVaccinatedPer100":60.86 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":54.0,"PeopleVaccinatedPer100":60.96 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":54.0,"PeopleVaccinatedPer100":60.96 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":54.1,"PeopleVaccinatedPer100":61.09 }
 		]},
 	{"Location":"Washington",
 		"Data":[
@@ -12233,7 +12294,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":56.81,"PeopleVaccinatedPer100":63.03 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":56.91,"PeopleVaccinatedPer100":63.13 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":57.0,"PeopleVaccinatedPer100":63.23 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":57.1,"PeopleVaccinatedPer100":63.33 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":57.1,"PeopleVaccinatedPer100":63.33 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":57.19,"PeopleVaccinatedPer100":63.43 }
 		]},
 	{"Location":"West Virginia",
 		"Data":[
@@ -12430,7 +12492,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":38.86,"PeopleVaccinatedPer100":45.8 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":38.88,"PeopleVaccinatedPer100":45.82 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":38.91,"PeopleVaccinatedPer100":45.86 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":38.93,"PeopleVaccinatedPer100":45.89 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":38.93,"PeopleVaccinatedPer100":45.89 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":38.94,"PeopleVaccinatedPer100":45.9 }
 		]},
 	{"Location":"Wisconsin",
 		"Data":[
@@ -12627,7 +12690,8 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":51.21,"PeopleVaccinatedPer100":54.81 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":51.29,"PeopleVaccinatedPer100":54.89 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":51.36,"PeopleVaccinatedPer100":54.97 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":51.43,"PeopleVaccinatedPer100":55.06 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":51.43,"PeopleVaccinatedPer100":55.06 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":51.5,"PeopleVaccinatedPer100":55.16 }
 		]},
 	{"Location":"Wyoming",
 		"Data":[
@@ -12824,6 +12888,7 @@ var VaxStatsByState = [ 	{"Location":"Alabama",
 		{"Date":"2021-07-21","PeopleFullyVaccinatedPer100":36.15,"PeopleVaccinatedPer100":40.86 },
 		{"Date":"2021-07-22","PeopleFullyVaccinatedPer100":36.22,"PeopleVaccinatedPer100":40.96 },
 		{"Date":"2021-07-23","PeopleFullyVaccinatedPer100":36.27,"PeopleVaccinatedPer100":41.05 },
-		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":36.34,"PeopleVaccinatedPer100":41.15 }
+		{"Date":"2021-07-24","PeopleFullyVaccinatedPer100":36.34,"PeopleVaccinatedPer100":41.15 },
+		{"Date":"2021-07-25","PeopleFullyVaccinatedPer100":36.35,"PeopleVaccinatedPer100":41.17 }
 		]}
 	]
