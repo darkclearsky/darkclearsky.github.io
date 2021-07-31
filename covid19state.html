@@ -468,6 +468,7 @@
 <script src=USAData_490.js></script>
 <script src=USAData_491.js></script>
 <script src=USAData_492.js></script>
+<script src=USAData_493.js></script>
 
 <script>
 
@@ -680,14 +681,22 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	ctx.beginPath();
 	if(Option == 0)
 	{
+		/*
 		if(ValueSeries1[0] > RunningAverage[0])
 			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(RunningAverage[0]*YScale)));
+		*/
+		if(ValueSeries1[0] > Max)
+			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(Max*YScale)));
 		else
 			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
 		for(x=1;x<ValueSeries1.length;x++)
 		{
+			/*
 			if(ValueSeries1[x] > RunningAverage[x])
 				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(RunningAverage[x]*YScale)));
+			*/
+			if(ValueSeries1[x] > Max)
+				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(Max*YScale)));
 			else
 				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(ValueSeries1[x]*YScale)));
 		}
