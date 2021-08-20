@@ -488,6 +488,7 @@
 <script src=USAData_510.js></script>
 <script src=USAData_511.js></script>
 <script src=USAData_512.js></script>
+<script src=USAData_513.js></script>
 
 <script>
 
@@ -700,20 +701,12 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	ctx.beginPath();
 	if(Option == 0)
 	{
-		/*
-		if(ValueSeries1[0] > RunningAverage[0])
-			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(RunningAverage[0]*YScale)));
-		*/
 		if(ValueSeries1[0] > Max)
 			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(Max*YScale)));
 		else
 			ctx.moveTo(TopLeft[0],TopLeft[1]+(SizeXY[1]-(ValueSeries1[0]*YScale)));
 		for(x=1;x<ValueSeries1.length;x++)
 		{
-			/*
-			if(ValueSeries1[x] > RunningAverage[x])
-				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(RunningAverage[x]*YScale)));
-			*/
 			if(ValueSeries1[x] > Max)
 				ctx.lineTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(Max*YScale)));
 			else
@@ -731,6 +724,23 @@ function XYChart(TopLeft, SizeXY, XEmphasis, Title, ValueSeries1, ValueSeries2, 
 	ctx.stroke();
 	ctx.closePath();
 	ctx.fill();
+
+	if(Option == 0)	// put markers on the enties where values exceeded the running average max
+	{
+		ctx.globalAlpha = 1.0;
+		ctx.strokeStyle = "black";
+		for(x=1;x<ValueSeries1.length;x++)
+		{
+			if(ValueSeries1[x] > Max)
+			{
+				ctx.beginPath();
+				ctx.moveTo(TopLeft[0]+(XScale*x),TopLeft[1]+(SizeXY[1]-(Max*YScale)));
+				ctx.lineTo(TopLeft[0]+(XScale*x)+XScale,TopLeft[1]+(SizeXY[1]-(Max*YScale)));
+				ctx.stroke();
+				ctx.closePath();
+			}
+		}
+	}
 
 	if(Option == 0)	// do 10 day running average - figured out above
 	{
