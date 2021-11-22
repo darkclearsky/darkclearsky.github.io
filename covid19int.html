@@ -632,6 +632,15 @@
 <script src=IntData_596.js></script>
 <script src=IntData_597.js></script>
 <script src=IntData_598.js></script>
+<script src=IntData_599.js></script>
+<script src=IntData_600.js></script>
+<script src=IntData_601.js></script>
+<script src=IntData_602.js></script>
+<script src=IntData_603.js></script>
+<script src=IntData_604.js></script>
+<script src=IntData_605.js></script>
+<script src=IntData_606.js></script>
+<script src=IntData_607.js></script>
 
 <script>
 
@@ -1342,6 +1351,7 @@ StateSelect.onchange = function()
 			{
 				if(VaccineClickData.Data[y].Pop != 0)
 				{
+					console.log("Pop1 = " + VaccineClickData.Data[y].Pop);
 					TotalVaccinations[x] = VaccineClickData.Data[y].TotalVaccinations;
 
 					if(VaccineClickData.Data[y].PeopleFullyVaccinated != 0)
@@ -1351,7 +1361,12 @@ StateSelect.onchange = function()
 							PeopleFullyVaccinatedPercentage[x] = PeopleFullyVaccinatedPercentage[x-1];
 
 					if(VaccineClickData.Data[y].PeopleVaccinated != 0)
+					{
 						PeopleVaccinatedPercentage[x] = (VaccineClickData.Data[y].PeopleVaccinated / (VaccineClickData.Data[y].Pop * 1000) * 100);
+						// console.log("VCD-PV = " + VaccineClickData.Data[y].PeopleVaccinated + " VCD-Pop = " + VaccineClickData.Data[y].Pop);
+						// console.log("V = " + VaccineClickData.Data[y].PeopleVaccinated + " PV = " + PeopleVaccinatedPercentage[x]);
+						console.log("Pop = " + VaccineClickData.Data[y].Pop);
+					}
 					else
 						if(x!=0)
 							PeopleVaccinatedPercentage[x] = PeopleVaccinatedPercentage[x-1];
