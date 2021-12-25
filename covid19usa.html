@@ -24,7 +24,7 @@
 <div class = "Table">
 	<div class = "Row">
 		<div class = "MapCell">
-			<canvas id="USAMap" width=1200 height=640 style="border:0px solid #ffffff; background-color:white;">
+			<canvas id="USAMap" width=1200 height=700 style="border:0px solid #ffffff; background-color:white;">
 			Your browser does not support HTML5
 			</canvas>
 		</div>
@@ -638,6 +638,7 @@
 <script src=USAData_637.js></script>
 <script src=USAData_638.js></script>
 <script src=USAData_639.js></script>
+<script src=USAData_640.js></script>
 
 <script>
 
@@ -1277,9 +1278,13 @@ function CalcAverages2()
 		DailyCases[x].CaseRank = new Array(DailyCases[x].Date.length);
 		DailyCases[x].DeathRank = new Array(DailyCases[x].Date.length);
 		DailyCases[x].MovingAverageCases = new Array(DailyCases[x].Date.length);
+		DailyCases[x].MovingAverageCasesPerCapita = new Array(DailyCases[x].Date.length);
 		DailyCases[x].MovingAverageDeaths = new Array(DailyCases[x].Date.length);
+		DailyCases[x].MovingAverageDeathsPerCapita = new Array(DailyCases[x].Date.length);
 		DailyCases[x].MovingAverageCases[0] = DailyCases[x].Cases[0];
+		DailyCases[x].MovingAverageCasesPerCapita[0] = DailyCases[x].Cases[0] / DailyCases[x].Pop;
 		DailyCases[x].MovingAverageDeaths[0] = DailyCases[x].Deaths[0];
+		DailyCases[x].MovingAverageDeathsPerCapita[0] = DailyCases[x].Deaths[0] / DailyCases[x].Pop;
 		DailyCases[x].DaysSincePeakCases = new Array(DailyCases[x].Date.length);
 		DailyCases[x].DaysSincePeakDeaths = new Array(DailyCases[x].Date.length);
 		DailyCases[x].MovingAveragePercentCaseGrowth = new Array(DailyCases[x].Date.length);
@@ -1325,7 +1330,9 @@ function CalcAverages2()
 					MovingAverageTotalDeaths += DailyCases[x].Deaths[z];
 				}
 				DailyCases[x].MovingAverageCases[y] = Math.ceil(MovingAverageTotalCases / ActualMovingAveragePeriod);
+				DailyCases[x].MovingAverageCasesPerCapita[y] = DailyCases[x].MovingAverageCases[y] / DailyCases[x].Pop;
 				DailyCases[x].MovingAverageDeaths[y] = Math.ceil(MovingAverageTotalDeaths / ActualMovingAveragePeriod);
+				DailyCases[x].MovingAverageDeathsPerCapita[y] = DailyCases[x].MovingAverageDeaths[y] / DailyCases[x].Pop;
 
 				var NumeratorCases,NumeratorDeaths,DenominatorCases,DenominatorDeaths;
 				if(ActualMovingAveragePeriod < MovingAveragePeriod)
@@ -1628,6 +1635,124 @@ function DrawAverageDailyCases()
 	}
 }
 
+function DrawAveCasePerCap()
+{
+	var Lat,Lng,x,c,Cases;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.7;
+
+	var s = 5;
+
+	for(x=0;x<DailyCases.length;x++)
+	{
+		Avg = DailyCases[x].MovingAverageCasesPerCapita[DateIndex];
+
+		if(Avg > 0.0015)
+		{
+			c = DeathSeverityColors.length-1;
+			s = 8;
+		}
+		else
+			if(Avg > 0.001)
+			{
+				c = DeathSeverityColors.length-1;
+				s = 5;
+			}
+			else
+				if(Avg > 0.0005)
+				{
+					c = DeathSeverityColors.length-2;
+					s = 4;
+				}
+				else
+					if(Avg > 0.0001)
+					{
+						c = DeathSeverityColors.length-3;
+						s = 2;
+					}
+					else
+						if(Avg > 0.00001)
+						{
+							c = DeathSeverityColors.length-4;
+							s = 2;
+						}
+						else
+						{
+							c = 0;
+							s = 1;
+						}
+
+		ctx.fillStyle = DeathSeverityColors[c];
+		Lat = MapToCanvasY(DailyCases[x].Lat);
+		Lng = MapToCanvasX(DailyCases[x].Long);
+		// ctx.globalAlpha = 1.0;
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
+function DrawAveDeathPerCap()
+{
+	var Lat,Lng,x,c,Cases;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.7;
+
+	var s = 5;
+
+	for(x=0;x<DailyCases.length;x++)
+	{
+		Avg = DailyCases[x].MovingAverageDeathsPerCapita[DateIndex];
+
+		if(Avg > 0.0005)
+		{
+			c = DeathSeverityColors.length-1;
+			s = 8;
+		}
+		else
+			if(Avg > 0.0001)
+			{
+				c = DeathSeverityColors.length-1;
+				s = 5;
+			}
+			else
+				if(Avg > 0.00005)
+				{
+					c = DeathSeverityColors.length-2;
+					s = 4;
+				}
+				else
+					if(Avg > 0.00001)
+					{
+						c = DeathSeverityColors.length-3;
+						s = 3;
+					}
+					else
+						if(Avg > 0.000005)
+						{
+							c = DeathSeverityColors.length-4;
+							s = 2;
+						}
+						else
+						{
+							c = 0;
+							s = 1;
+						}
+
+		ctx.fillStyle = DeathSeverityColors[c];
+		Lat = MapToCanvasY(DailyCases[x].Lat);
+		Lng = MapToCanvasX(DailyCases[x].Long);
+		// ctx.globalAlpha = 1.0;
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
 function DrawDailyCases()
 {
 	var Lat,Lng,x,c,Cases;
@@ -1728,6 +1853,12 @@ function DrawData()
 					break;
 		case	11:	// Growing / Receding trend - deaths
 					DrawDeathGrowth();
+					break;
+		case	12:	// 10 day cases per capita
+					DrawAveCasePerCap();
+					break;
+		case	13:	// 10 day deaths per capita
+					DrawAveDeathPerCap();
 					break;
 	}
 }
@@ -2250,6 +2381,13 @@ function DrawClickData()
 
 				dy += FontSize;
 				ctx.fillStyle = "black";
+				ctx.fillText("10 Day Avg Cases Per Cap:",dx,dy);
+				ctx.fillStyle = "darkred";
+				z = (ClickData[x].DailyCasesEntry.MovingAverageCasesPerCapita[DateIndex] * 100).toFixed(4);
+				ctx.fillText(z + "%",dx+StatColumn,dy);
+
+				dy += FontSize;
+				ctx.fillStyle = "black";
 				ctx.fillText("Nat'l Rank Avg Cases:",dx,dy);
 				ctx.fillStyle = "darkred";
 				ctx.fillText(ClickData[x].DailyCasesEntry.CaseRank[DateIndex],dx+StatColumn,dy);
@@ -2265,6 +2403,13 @@ function DrawClickData()
 				ctx.fillText("10 Day Avg Deaths:",dx,dy);
 				ctx.fillStyle = "darkred";
 				ctx.fillText(ClickData[x].DailyCasesEntry.MovingAverageDeaths[DateIndex],dx+StatColumn,dy);
+
+				dy += FontSize;
+				ctx.fillStyle = "black";
+				ctx.fillText("10 Day Avg Deaths Per Cap:",dx,dy);
+				ctx.fillStyle = "darkred";
+				z = (ClickData[x].DailyCasesEntry.MovingAverageDeathsPerCapita[DateIndex] * 100).toFixed(5);
+				ctx.fillText(z + "%",dx+StatColumn,dy);
 
 				dy += FontSize;
 				ctx.fillStyle = "black";
@@ -2297,7 +2442,7 @@ function DrawClickData()
 						ChartFatalities[y] = 0;
 					}
 				}
-				XYChart([dx+ChartColumn,BottomDrawAreaStart],[130,120],DateIndex,["Days since 3/22",""],ChartCases,ChartFatalities);
+				XYChart([dx+ChartColumn,BottomDrawAreaStart],[130,160],DateIndex,["Days since 3/22",""],ChartCases,ChartFatalities);
 			}
 
 			dx += DetailedStatsSpacing;
@@ -2397,7 +2542,9 @@ var DisplayOptions = [
 							"Total Cases", 							// 8
 							"Total Deaths",							// 9 
 							"10 Day Average Case Growth Trends",	// 10
-							"10 Day Average Fatality Growth Trends"	// 11
+							"10 Day Average Fatality Growth Trends",// 11
+							"10 Day Average Cases Per Capita",		// 12
+							"10 Day Average Deaths Per Capita"		// 13
 					];
 var DisplayIndex = 0;
 var MaxSummary = 4;
