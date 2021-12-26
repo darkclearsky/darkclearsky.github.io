@@ -639,7 +639,7 @@
 <script src=USAData_638.js></script>
 <script src=USAData_639.js></script>
 <script src=USAData_640.js></script>
-
+<script src=USAData_641.js></script>
 <script>
 
 var MinLat = 25;
@@ -1150,7 +1150,10 @@ function CalcAverages2()
 									TotalCases: [],
 									Cases: [],
 									TotalDeaths: [],
-									Deaths: [] });
+									Deaths: [],
+									CasesPerCap: [],
+									DeathsPerCap: []
+									});
 
 		// populate first days data while we are here..
 		DailyCases[x].Date.push(ReportDate[0].Date);
@@ -1158,6 +1161,8 @@ function CalcAverages2()
 		DailyCases[x].Cases.push(ReportDate[0].Data[x].Cases);
 		DailyCases[x].TotalDeaths.push(ReportDate[0].Data[x].Deaths);
 		DailyCases[x].Deaths.push(ReportDate[0].Data[x].Deaths);
+		DailyCases[x].CasesPerCap.push(ReportDate[0].Data[x].PerCapita);
+		DailyCases[x].DeathsPerCap.push(ReportDate[0].Data[x].DeathsPerCapita);
 	}
 
 	console.log(Date.now() - StartTime + ":Initial first day " + DailyCases.length + " entry county list created");
@@ -1191,7 +1196,10 @@ function CalcAverages2()
 												TotalCases: [],
 												Cases: [],
 												TotalDeaths: [],
-												Deaths: [] });
+												Deaths: [] }
+												CasesPerCap: [],
+												DeathsPerCap: []
+												);
 				// populate first days data with 0/blanks since they didn't report then..
 				DailyCases[z-1].Date.push("");
 				DailyCases[z-1].TotalCases.push(0);
@@ -1222,6 +1230,8 @@ function CalcAverages2()
 			DailyCases[z].Cases.push(0);
 			DailyCases[z].TotalDeaths.push(0);
 			DailyCases[z].Deaths.push(0);
+			DailyCases[z].CasesPerCap.push(0);
+			DailyCases[z].DeathsPerCap.push(0);
 
 			a = DailyCases[z].Date.length-1;
 
@@ -1236,6 +1246,8 @@ function CalcAverages2()
 					DailyCases[z].Cases[a] = ReportDate[x].Data[y].Cases;
 					DailyCases[z].TotalDeaths[a] = ReportDate[x].Data[y].Deaths;
 					DailyCases[z].Deaths[a] = ReportDate[x].Data[y].Deaths;
+					DailyCases[z].CasesPerCap[a] = ReportDate[x].Data[y].PerCapita;
+					DailyCases[z].DeathsPerCap[a] = ReportDate[x].Data[y].DeathsPerCapita;
 
 					// make backward reference for convenience
 					ReportDate[x].Data[y].DailyCasesEntry = DailyCases[z];
@@ -1252,6 +1264,8 @@ function CalcAverages2()
 				DailyCases[z].TotalCases[a] = DailyCases[z].TotalCases[a-1];
 				DailyCases[z].Deaths[a] = DailyCases[z].Deaths[a-1];
 				DailyCases[z].TotalDeaths[a] = DailyCases[z].TotalDeaths[a-1];
+				DailyCases[z].CasesPerCap[a] = DailyCases[z].CasesPerCap[a-1];
+				DailyCases[z].DeathsPerCap[a] = DailyCases[z].DeathsPerCap[a-1];
 			}
 		}
 	}
@@ -1812,6 +1826,124 @@ function DrawDailyCases()
 	}
 }
 
+function DrawTotalCasesPerCapita()
+{
+	var Lat,Lng,x,c,Cases;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.7;
+
+	var s = 5;
+
+	for(x=0;x<DailyCases.length;x++)
+	{
+		Rate = DailyCases[x].CasesPerCap[DateIndex];
+
+		if(Rate > 0.25)
+		{
+			c = DeathSeverityColors.length-1;
+			s = 8;
+		}
+		else
+			if(Rate > 0.2)
+			{
+				c = DeathSeverityColors.length-1;
+				s = 5;
+			}
+			else
+				if(Rate > 0.15)
+				{
+					c = DeathSeverityColors.length-2;
+					s = 4;
+				}
+				else
+					if(Rate > 0.1)
+					{
+						c = DeathSeverityColors.length-3;
+						s = 3;
+					}
+					else
+						if(Rate > 0.05)
+						{
+							c = DeathSeverityColors.length-4;
+							s = 2;
+						}
+						else
+						{
+							c = 0;
+							s = 1;
+						}
+
+		ctx.fillStyle = DeathSeverityColors[c];
+		Lat = MapToCanvasY(DailyCases[x].Lat);
+		Lng = MapToCanvasX(DailyCases[x].Long);
+		// ctx.globalAlpha = 1.0;
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
+function DrawTotalDeathsPerCapita()
+{
+	var Lat,Lng,x,c,Cases;
+	ctx.strokeStyle = "#000000";
+	ctx.globalAlpha = 0.7;
+
+	var s = 5;
+
+	for(x=0;x<DailyCases.length;x++)
+	{
+		Rate = DailyCases[x].CasesPerCap[DateIndex];
+
+		if(Rate > 0.5)
+		{
+			c = DeathSeverityColors.length-1;
+			s = 3;
+		}
+		else
+			if(Rate > 0.25)
+			{
+				c = DeathSeverityColors.length-1;
+				s = 3;
+			}
+			else
+				if(Rate > 0.05)
+				{
+					c = DeathSeverityColors.length-2;
+					s = 3;
+				}
+				else
+					if(Rate > 0.025)
+					{
+						c = DeathSeverityColors.length-3;
+						s = 3;
+					}
+					else
+						if(Rate > 0.005)
+						{
+							c = DeathSeverityColors.length-4;
+							s = 2;
+						}
+						else
+						{
+							c = 0;
+							s = 1;
+						}
+
+		ctx.fillStyle = DeathSeverityColors[c];
+		Lat = MapToCanvasY(DailyCases[x].Lat);
+		Lng = MapToCanvasX(DailyCases[x].Long);
+		// ctx.globalAlpha = 1.0;
+		ctx.beginPath();
+		ctx.arc(Lng,Lat,s,0,2*Math.PI);
+		ctx.fill();
+		// ctx.stroke();
+		ctx.closePath();
+	}
+}
+
 function DrawData()
 {
 	var x;
@@ -1859,6 +1991,12 @@ function DrawData()
 					break;
 		case	13:	// 10 day deaths per capita
 					DrawAveDeathPerCap();
+					break;
+		case	14: // Total cases per capita
+					DrawTotalCasesPerCapita();
+					break;
+		case	15: // Total deaths per capita
+					DrawTotalDeathsPerCapita();
 					break;
 	}
 }
@@ -2544,7 +2682,9 @@ var DisplayOptions = [
 							"10 Day Average Case Growth Trends",	// 10
 							"10 Day Average Fatality Growth Trends",// 11
 							"10 Day Average Cases Per Capita",		// 12
-							"10 Day Average Deaths Per Capita"		// 13
+							"10 Day Average Deaths Per Capita",		// 13
+							"Total Cases Per Capita",				// 14
+							"Total Deaths Per Capita"				// 15
 					];
 var DisplayIndex = 0;
 var MaxSummary = 4;
